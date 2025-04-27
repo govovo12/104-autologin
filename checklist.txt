@@ -1,0 +1,71 @@
+# clockin-bot 換人使用 Checklist
+
+✅ 1. 安裝 Python 3.10 或以上版本
+
+✅ 2. 打開CMD，移動到 clockin-bot 資料夾
+```
+cd C:\Users\你的使用者名稱\Desktop\clockin-bot
+```
+
+✅ 3. 創建虛擬環境
+```
+python -m venv venv
+```
+
+✅ 4. 啟動虛擬環境
+```
+venv\Scripts\activate
+```
+
+✅ 5. 安裝必要套件
+```
+pip install playwright pyautogui pytesseract requests pillow pygetwindow keyboard
+playwright install
+```
+
+✅ 6. 修改 config.py（⚡必要）
+- TELEGRAM_BOT_TOKEN = '你的Bot Token'
+- TELEGRAM_CHAT_ID = '你的Chat ID'
+- OUTLINE_PATH = r'C:\Program Files (x86)\Outline\Outline.exe'  (依你的安裝路徑)
+- TESSERACT_CMD = r'C:\Program Files\Tesseract-OCR\tesseract.exe' (依你的安裝路徑)
+
+✅ 7. 執行 login_save_cookie.py，手動登入104保存login_state.json
+```
+python login_save_cookie.py
+```
+完成後會產生 login_state.json，保存好！
+
+✅ 8. 執行 record_positions.py，重新記錄 Outline 按鈕座標
+```
+python record_positions.py
+```
+按照指示依序點擊【Outline左上角】、【連線按鈕左上角】、【連線按鈕右下角】、【已連線左上角】、【已連線右下角】
+
+✅ 9. 測試 check_cookie_alive.py 是否能正常檢查登入狀態
+```
+python check_cookie_alive.py
+```
+Telegram應該會收到成功或失敗通知。
+
+✅ 10. 測試 scheduler_main.py 是否能打開 Outline + 104 打卡
+```
+python scheduler_main.py
+```
+確定能自動打開 Outline VPN，然後跳轉到104打卡完成。
+
+✅ 11. （可選）設定 Windows 排程器：
+- 每天8:50~8:59隨機打卡（scheduler_main.py）
+- 每月10號早上9:00檢查cookie（check_cookie_alive.py）
+
+---
+
+# ✅ 最後小提醒
+
+| 項目 | 注意事項 |
+|:---|:---|
+| Telegram Token | 每個人不同，必須自己去申請 |
+| login_state.json | 每個人不同，需要自己登入一次產生 |
+| Outline路徑/Tesseract路徑 | 每台電腦安裝位置可能不同，必須確認 |
+| 螢幕解析度/比例 | 解析度不同必須重錄座標 |
+
+✅ 照這份Checklist走，clockin-bot可以快速部署成功！🎯
