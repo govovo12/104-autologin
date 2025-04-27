@@ -1,0 +1,7 @@
+playwright
+requests
+pyautogui
+pytesseract
+pygetwindow
+pillow
+keyboard

@@ -1,117 +1,77 @@
-import subprocess
 import time
 import pyautogui
 import pytesseract
 import requests
 import pygetwindow as gw
 from PIL import ImageGrab
-
-# === Telegram Bot 資訊 ===
-TELEGRAM_BOT_TOKEN = '7880668864:AAGaji_gX7WJMifuQIXRtcX-vlbGF6Z2ZEc'
-TELEGRAM_CHAT_ID = '6184827725'
-
-# === Outline 路徑設定 ===
-OUTLINE_PATH = r"C:\Program Files (x86)\Outline\Outline.exe"
+from config import TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+from telegram_notify import send_telegram_message
 
 # === Tesseract OCR 設定 ===
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-def send_telegram_message(message):
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
-        "text": message
-    }
-    try:
-        response = requests.post(url, data=payload)
-        response.raise_for_status()
-        print("📬 成功發送Telegram訊息")
-    except Exception as e:
-        print(f"⚠️ 發送Telegram失敗：{e}")
+# === 座標設定 ===
+positions = {
+    "connect_button_topleft": (1718, 811),
+    "connect_button_bottomright": (1759, 836),
+    "connected_topleft": (1594, 738),
+    "connected_bottomright": (1645, 757),
+}
 
-def open_outline():
-    subprocess.Popen(OUTLINE_PATH)
-    print("✅ 已啟動 Outline，等待打開...")
-    time.sleep(5)  # 等待Outline啟動完成
+# === 截圖指定範圍 ===
+def capture_area(topleft, bottomright):
+    return ImageGrab.grab(bbox=(topleft[0], topleft[1], bottomright[0], bottomright[1]))
 
-def get_outline_window():
-    return gw.getWindowsWithTitle('Outline')[0]
+# === OCR判斷連線成功 ===
+def detect_connected():
+    screenshot = capture_area(positions["connected_topleft"], positions["connected_bottomright"])
+    text = pytesseract.image_to_string(screenshot, lang='eng+chi_tra')
+    print(f"OCR偵測到的文字：{text.strip()}")
+    return "已連線" in text
 
-def get_connected_bbox():
-    outline_window = get_outline_window()
-    window_left = outline_window.left
-    window_top = outline_window.top
+# === 等待 Outline 視窗出現 ===
+def wait_for_outline_window(timeout=30):
+    print("⌛ 等待 Outline 視窗啟動...")
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        windows = gw.getWindowsWithTitle("Outline")
+        if windows:
+            print("🖥️ 找到 Outline 視窗！")
+            return True
+        time.sleep(1)
+    print("❌ 找不到 Outline 視窗，可能啟動失敗")
+    return False
 
-    # 調整過，放大OCR範圍
-    x1 = window_left + 146
-    y1 = window_top + 402
-    x2 = window_left + 217
-    y2 = window_top + 441
-    return (x1, y1, x2, y2)
+# === 主控流程 ===
+def connect_outline_vpn():
+    print("🚀 Clockin-bot 主控流程啟動！（最終版）")
+    print("🔍 檢查 Outline 狀態中...（由外部 .bat 啟動 Outline）")
 
+    # 等待一點時間讓 Outline 真的打開
+    time.sleep(8)
 
-def check_connected_ocr():
-    bbox = get_connected_bbox()
-    img = ImageGrab.grab(bbox=bbox)
-
-    text = pytesseract.image_to_string(img, lang='chi_tra')
-    print(f"OCR偵測到的文字：{text}")
-
-    if "已連線" in text:
-        print("✅ 偵測到已連線成功！")
-        return True
-    else:
-        print("❌ 沒偵測到連線成功")
+    # 新增：確認 Outline 視窗有打開
+    if not wait_for_outline_window():
+        send_telegram_message("❌ 無法啟動 Outline，停止後續打卡流程")
         return False
 
-def connect_vpn():
-    for attempt in range(3):
-        try:
-            print(f"🔎 第{attempt+1}次嘗試連線...")
+    max_retries = 3
+    for attempt in range(1, max_retries + 1):
+        print(f"🔎 第{attempt}次嘗試連線...")
 
-            outline_window = get_outline_window()
-            window_left = outline_window.left
-            window_top = outline_window.top
+        if detect_connected():
+            print("🎯 VPN連線成功！")
+            send_telegram_message("🎯 VPN連線成功！（Clockin-bot檢測）")
+            return True
 
-            # 點擊連線按鈕中心點
-            connect_btn_x = window_left + 300
-            connect_btn_y = window_top + 497
+        print(f"⚠️ 第{attempt}次失敗，嘗試點擊連線按鈕...")
 
-            pyautogui.moveTo(connect_btn_x, connect_btn_y)
-            print(f"⏳ 移動到連線按鈕中心 ({connect_btn_x}, {connect_btn_y})，準備點擊...（2秒後）")
-            time.sleep(2)
-            pyautogui.click()
-            print("✅ 已點擊連線按鈕，等待連線...")
-            time.sleep(5)
+        # 點擊連線按鈕中心點
+        center_x = (positions["connect_button_topleft"][0] + positions["connect_button_bottomright"][0]) // 2
+        center_y = (positions["connect_button_topleft"][1] + positions["connect_button_bottomright"][1]) // 2
+        pyautogui.click(center_x, center_y)
+        time.sleep(5)
 
-            print("⏳ 開始OCR連續偵測（最多10秒）...")
-            connected = False
-            for i in range(10):
-                if check_connected_ocr():
-                    connected = True
-                    break
-                else:
-                    print(f"🔎 第{i+1}秒：未偵測到，繼續偵測...")
-                    time.sleep(1)
-
-            if connected:
-                print("🎯 VPN連線成功！（連續偵測確認）")
-                send_telegram_message("✅ Outline VPN 連線成功！")
-                return True
-            else:
-                raise Exception("連續偵測10秒後仍未確認連線成功")
-
-        except Exception as e:
-            print(f"⚠️ 第{attempt+1}次失敗：{e}")
-            if attempt == 2:
-                print("❌ 三次都連線失敗")
-                send_telegram_message("❌ Outline VPN 連線失敗！")
-                return False
-            else:
-                print("⏳ 重試中...")
-                time.sleep(3)
-
-if __name__ == "__main__":
-    open_outline()
-    connect_vpn()
-
+    print("❌ 三次都連線失敗")
+    send_telegram_message("❌ VPN連線失敗，停止後續打卡流程")
+    return False

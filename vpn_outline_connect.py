@@ -40,7 +40,7 @@ def check_connected_ocr():
     print(f"OCR偵測到的文字：{text}")
     return "已連線" in text
 
-def connect_vpn():
+def connect_outline_vpn():
     for attempt in range(3):
         try:
             print(f"🔎 第{attempt+1}次嘗試連線...")

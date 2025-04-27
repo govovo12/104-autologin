@@ -90,6 +90,27 @@ playwright install
 | vpn_outline_connect.py    | VPN連線模組（呼叫Outline Connect流程） |
 
 ---
+🔥 更新：加入 .bat 啟動 + 排程器設定！
+現在改成由 clockin_start.bat 啟動 Outline 和打卡流程。
+
+請用 Windows 工作排程器，設定排程指向 clockin_start.bat。
+
+排程設定時務必勾選「以最高權限執行」。
+
+Outline.exe 必須事先安裝在 C:\Program Files (x86)\Outline。
+
+clockin_start.bat 會自動打開 Outline，等待8秒後進入打卡流程。
+
+🛠️ 新增：每月自動檢查 cookie 有效性
+新增一個 check_cookie_start.bat 啟動檔案，用來檢查 login_state.json 是否即將過期。
+
+排程器需額外建立一個新任務，指向 check_cookie_start.bat。
+
+執行時間建議設定為：每月10日早上 9:00。
+
+如果 cookie 有效，Telegram 會發出剩餘天數通知；如果即將失效，也會提醒更新。
+
+
 
 ✅ 完成這些設定後，clockin-bot即可穩定運作！
 ✅ 每天準時自動打卡，出錯時即時Telegram通知！
