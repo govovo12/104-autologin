@@ -1,0 +1,32 @@
+{
+    "outline_top_left": {
+        "x": -3,
+        "y": -10,
+        "comment": "Outline視窗左上角"
+    },
+    "outline_bottom_right": {
+        "x": 358,
+        "y": 637,
+        "comment": "Outline視窗右下角"
+    },
+    "connect_button_top_left": {
+        "x": 272,
+        "y": 460,
+        "comment": "連線按鈕左上角"
+    },
+    "connect_button_bottom_right": {
+        "x": 336,
+        "y": 519,
+        "comment": "連線按鈕右下角"
+    },
+    "connected_status_top_left": {
+        "x": 149,
+        "y": 400,
+        "comment": "已連線提示左上角"
+    },
+    "connected_status_bottom_right": {
+        "x": 212,
+        "y": 433,
+        "comment": "已連線提示右下角"
+    }
+}
