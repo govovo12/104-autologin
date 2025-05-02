@@ -3,76 +3,122 @@ import time
 import cv2
 import numpy as np
 import pyautogui
+from pathlib import Path
 from telegram_notify import send_telegram_message
 
 # === 常數設定 ===
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-OUTLINE_SHORTCUT_PATH = os.path.join(os.path.expanduser("~"), "Desktop", "Outline.lnk")
-CONNECT_BUTTON_PATH = os.path.join(BASE_DIR, "connect_button.png")
-CONNECTED_IMAGE_PATH = os.path.join(BASE_DIR, "connected_text.png")
-DISCONNECT_BUTTON_PATH = os.path.join(BASE_DIR, "disconnect_button.png")
-DISCONNECT_X_PATH = os.path.join(BASE_DIR, "disconnect_buttonx.png")
+BASE_DIR = Path(__file__).resolve().parent.parent
+IMAGE_DIR = BASE_DIR / "vpn_outline_connect"
+OUTLINE_SHORTCUT_PATH = Path.home() / "Desktop" / "Outline.lnk"
 
-CONNECT_BUTTON_IMAGE = cv2.imread(CONNECT_BUTTON_PATH)
-CONNECTED_IMAGE = cv2.imread(CONNECTED_IMAGE_PATH)
-DISCONNECT_IMAGE = cv2.imread(DISCONNECT_BUTTON_PATH)
-DISCONNECT_X_IMAGE = cv2.imread(DISCONNECT_X_PATH)
+# VPN 圖片路徑
+CONNECT_BUTTON_IMG = IMAGE_DIR / "connect_button.png"
+CONNECTED_TEXT_IMG = IMAGE_DIR / "connected_text.png"
+DISCONNECT_BUTTON_IMG = IMAGE_DIR / "disconnect_button.png"
+DISCONNECT_BUTTONX_IMG = IMAGE_DIR / "disconnect_buttonx.png"
 
-# === 圖像比對函式 ===
-def match_template(screenshot, template, threshold=0.8):
-    result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
-    min_val, max_val, _, max_loc = cv2.minMaxLoc(result)
-    return max_val
+# === 功能函式 ===
 
-def get_button_position(template, screenshot):
-    result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
-    _, _, _, max_loc = cv2.minMaxLoc(result)
-    h, w = template.shape[:2]
-    center_x = max_loc[0] + w // 2
-    center_y = max_loc[1] + h // 2
-    return center_x, center_y
-
-def screenshot_outline():
-    screenshot = pyautogui.screenshot()
-    return cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
-
-# === 主邏輯：可供 scheduler_main 使用 ===
-def connect_outline_vpn():
-    retry_count = 0
-    max_retries = 3
-
-    print("啟動 Outline...")
+def launch_outline():
+    """啟動 Outline 並將視窗移到前景"""
     os.startfile(OUTLINE_SHORTCUT_PATH)
-    time.sleep(3)
+    time.sleep(5)  # 等待程式啟動
+    try:
+        outline_window = pyautogui.getWindowsWithTitle("Outline")[0]
+        if outline_window.isMinimized:
+            outline_window.restore()
+        outline_window.activate()
+    except Exception as e:
+        print(f"找不到 Outline 視窗: {e}")
+        send_telegram_message("❌ 找不到 Outline 視窗，啟動失敗")
+        return False
+    return True
 
-    while retry_count < max_retries:
-        print(f"第 {retry_count + 1} 次圖像分析中...")
-        screenshot_np = screenshot_outline()
-        filename = os.path.join(BASE_DIR, f"ocr_debug_{int(time.time())}.png")
-        cv2.imwrite(filename, screenshot_np)
-        print(f"已儲存截圖至 {filename}")
+def match_template(target_img_path, threshold=0.8):
+    """使用模板比對"""
+    screen = pyautogui.screenshot()
+    screen = cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
+    template = cv2.imread(str(target_img_path))
+    res = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    return max_val >= threshold
 
-        if match_template(screenshot_np, CONNECTED_IMAGE) >= 0.95:
-            print("已判斷為 [已連線]，穩定退出。")
-            send_telegram_message("✅ VPN 連線成功")
+def wait_for_image(target_img_path, timeout=10, threshold=0.8):
+    """等待指定圖片出現"""
+    start = time.time()
+    while time.time() - start < timeout:
+        if match_template(target_img_path, threshold):
             return True
-
-        if match_template(screenshot_np, CONNECT_BUTTON_IMAGE) >= 0.95:
-            x, y = get_button_position(CONNECT_BUTTON_IMAGE, screenshot_np)
-            pyautogui.moveTo(x, y)
-            pyautogui.click()
-            print(f"找到 [連線] 按鈕，正在點擊 ({x}, {y})")
-            print("點擊後等待 VPN 建立連線（延遲 5 秒）...")
-            time.sleep(5)
-        else:
-            print("未找到 [連線] 按鈕，比對失敗，重試...")
-
-        retry_count += 1
-
-    print("❌ VPN 連線失敗，已重試 3 次")
-    send_telegram_message("❌ VPN 連線失敗，請手動確認！")
+        time.sleep(1)
     return False
 
-# 如果你要單獨測試，也能跑
-if __name__ == "__main__":
-    connect_outline_vpn()
+def connect_outline_vpn():
+    """智能連線 Outline"""
+    if not launch_outline():
+        return False
+
+    # 啟動後，先檢查是否已連線
+    if match_template(CONNECTED_TEXT_IMG):
+        print("✅ 已連線狀態，跳過連線步驟")
+        return True  # 直接回傳連線成功
+
+    # 沒有已連線 → 去點連線按鈕
+    print("🔄 尚未連線，嘗試點擊連線按鈕")
+    if not wait_for_image(CONNECT_BUTTON_IMG, timeout=10):
+        print("❌ 找不到連線按鈕")
+        send_telegram_message("❌ 找不到連線按鈕，無法連線VPN")
+        return False
+
+    button_location = pyautogui.locateCenterOnScreen(str(CONNECT_BUTTON_IMG), confidence=0.8)
+    if button_location:
+        pyautogui.click(button_location)
+        print("✅ 成功點擊連線按鈕")
+    else:
+        print("❌ 連線按鈕定位失敗")
+        send_telegram_message("❌ 連線按鈕定位失敗")
+        return False
+
+    # 點了連線後，確認是否真的連線成功
+    if wait_for_image(CONNECTED_TEXT_IMG, timeout=15):
+        print("✅ VPN連線成功")
+        return True
+    else:
+        print("❌ VPN連線超時未成功")
+        send_telegram_message("❌ VPN連線超時未成功")
+        return False
+
+def disconnect_outline_vpn():
+    """打卡完成後，中斷連線並關閉 Outline"""
+    print("🛑 準備中斷連線...")
+
+    if not wait_for_image(DISCONNECT_BUTTON_IMG, timeout=10):
+        print("❌ 找不到中斷連線按鈕")
+        send_telegram_message("❌ 找不到中斷連線按鈕")
+        return False
+
+    disconnect_location = pyautogui.locateCenterOnScreen(str(DISCONNECT_BUTTON_IMG), confidence=0.8)
+    if disconnect_location:
+        pyautogui.click(disconnect_location)
+        print("✅ 點擊中斷連線按鈕")
+    else:
+        print("❌ 中斷連線按鈕定位失敗")
+        send_telegram_message("❌ 中斷連線按鈕定位失敗")
+        return False
+
+    # 等待已中斷連線確認
+    if not wait_for_image(DISCONNECT_BUTTONX_IMG, timeout=15):
+        print("❌ 中斷連線超時未成功")
+        send_telegram_message("❌ 中斷連線超時未成功")
+        return False
+
+    # 成功看到中斷連線，點右上角X關閉Outline
+    try:
+        outline_window = pyautogui.getWindowsWithTitle("Outline")[0]
+        outline_window.close()
+        print("✅ 成功關閉 Outline")
+    except Exception as e:
+        print(f"❌ 關閉 Outline 視窗失敗: {e}")
+        send_telegram_message(f"❌ 關閉 Outline 視窗失敗: {e}")
+        return False
+
+    return True

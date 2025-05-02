@@ -1,28 +1,31 @@
+from pathlib import Path
 import json
 from datetime import datetime
-from pathlib import Path
 
-# === 假日判定模組 ===
+# === 常數設定 ===
 BASE_DIR = Path(__file__).resolve().parent.parent
-HOLIDAY_JSON = BASE_DIR / "data" / "holidays_2025.json"
-MANUAL_SKIP_JSON = BASE_DIR / "data" / "manual_skip_days.json"
+DATA_DIR = BASE_DIR / "data"
+HOLIDAY_JSON = DATA_DIR / "holidays_2025.json"
+MANUAL_SKIP_JSON = DATA_DIR / "manual_skip_days.json"
 
 def is_today_holiday():
+    """判斷今天是否國定假日或手動排除日"""
     today = datetime.today().strftime("%Y-%m-%d")
-    
+
     try:
-        with open(HOLIDAY_JSON, "r", encoding="utf-8") as f:
+        with HOLIDAY_JSON.open("r", encoding="utf-8") as f:
             holidays = json.load(f)
     except Exception as e:
-        print(f"[錯誤] 讀取 holidays_2025.json 失敗: {e}")
+        print(f"讀取 holidays_2025.json 失敗: {e}")
         holidays = []
 
     try:
-        with open(MANUAL_SKIP_JSON, "r", encoding="utf-8") as f:
+        with MANUAL_SKIP_JSON.open("r", encoding="utf-8") as f:
             manual_skips = json.load(f)
     except Exception as e:
-        print(f"[錯誤] 讀取 manual_skip_days.json 失敗: {e}")
+        print(f"讀取 manual_skip_days.json 失敗: {e}")
         manual_skips = []
 
     return today in holidays or today in manual_skips
+
 
