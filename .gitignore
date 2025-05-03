@@ -1,6 +1,28 @@
+# 忽略 venv 虛擬環境
 venv/
+
+# 忽略 Python cache
 __pycache__/
-login_state.json
-*.zip
 *.pyc
 *.pyo
+*.pyd
+
+# 忽略本地開發工具設定
+.idea/
+.vscode/
+
+# 忽略 MacOS 系統垃圾
+.DS_Store
+
+# 忽略暫存或測試用的圖片、打卡截圖
+clockin_result.png
+
+# 忽略 Playwright 產生的快照或測試暫存（如果有用）
+playwright-report/
+test-results/
+
+# 忽略個人化資料
+data/login_state.json
+data/positions.json
+
+

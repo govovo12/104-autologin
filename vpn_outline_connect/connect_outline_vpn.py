@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import pyautogui
 from pathlib import Path
-from telegram_notify import send_telegram_message
+from scripts.telegram_notify import send_telegram_message
 
 # === 常數設定 ===
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -80,12 +80,14 @@ def connect_outline_vpn():
 
     # 點了連線後，確認是否真的連線成功
     if wait_for_image(CONNECTED_TEXT_IMG, timeout=15):
-        print("✅ VPN連線成功")
-        return True
+       print("✅ VPN連線成功")
+       send_telegram_message("✅ VPN連線成功，開始打卡流程！")
+       return True
     else:
-        print("❌ VPN連線超時未成功")
-        send_telegram_message("❌ VPN連線超時未成功")
-        return False
+         print("❌ VPN連線超時未成功")
+         send_telegram_message("❌ VPN連線超時未成功")
+         return False
+
 
 def disconnect_outline_vpn():
     """打卡完成後，中斷連線並關閉 Outline"""

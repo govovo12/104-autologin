@@ -1,5 +1,5 @@
 @echo off
 cd /d "%~dp0\.."
 call venv\Scripts\activate
-python -m scripts.scheduler_main
+python print_clean_structure.py
 pause

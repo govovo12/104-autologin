@@ -1,5 +1,5 @@
 @echo off
-cd /d C:\Users\user\Desktop\clockin-bot
-call venv\Scripts\activate.bat
-python scheduler_main.py
-exit
+cd /d "%~dp0\.."
+venv\Scripts\activate
+python scripts\clockin_104.py
+pause

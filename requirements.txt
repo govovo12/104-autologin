@@ -1,7 +1,5 @@
-playwright
-requests
-pyautogui
-pytesseract
-pygetwindow
-pillow
-keyboard
+playwright>=1.41.0
+pyautogui>=0.9.54
+opencv-python>=4.8.0.76
+numpy>=1.26.0
+

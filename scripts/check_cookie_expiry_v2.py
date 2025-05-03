@@ -4,7 +4,7 @@ from datetime import datetime
 from pathlib import Path
 
 # === Cookie 狀態檢查腳本 ===
-from telegram_notify import send_telegram_message
+from scripts.telegram_notify import send_telegram_message
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 COOKIE_PATH = BASE_DIR / "data" / "login_state.json"

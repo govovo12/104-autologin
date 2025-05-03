@@ -1,7 +1,7 @@
 # telegram_notify.py
 import requests
 from datetime import datetime
-from config import TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+from scripts.config import TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 
 def send_telegram_message(message):
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 取得現在時間
