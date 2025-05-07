@@ -67,7 +67,7 @@ clockin-bot/
 ├── README.md             # 使用說明（本文件）
 ├── .gitignore            # 忽略設定
 └── print_clean_structure.py  # 顯示資料夾結構的小工具
-🆕 版本變更紀錄（CHANGELOG）
+🆕 版本變更紀錄（CHANGELOG） 
 🟢 Clockin-Bot v1.3（功能強化版）
 🛠 打卡成功判斷方式升級：打卡按鈕按下後，比對新出現元素內容是否包含「打卡成功」，避免誤判。
 
