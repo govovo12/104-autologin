@@ -4,6 +4,7 @@
 - 啟動 VPN (Outline)
 - 智能 OCR 檢查 VPN 連線狀態
 - 自動登入 104 打卡系統
+- **打卡後比對新提示，判斷是否成功**
 - 檢查國定假日與自訂排除日，自動跳過
 - 支援 Telegram 訊息推送通知
 
@@ -37,39 +38,25 @@
    python -m venv venv
    venv\Scripts\activate
    pip install -r requirements.txt
-   ```
+安裝 Playwright 需要的瀏覽器（很重要！）
 
-2. 安裝 Playwright 需要的瀏覽器（很重要！）
-   ```bash
-   playwright install
-   ```
+playwright install
+手動儲存登入狀態
 
-3. 手動儲存登入狀態
-   ```bash
-   python -m scripts.login_save_cookie
-   ```
-   > ⚠️ 登入 104 統一入口網站，完成驗證、跳轉到「私人秘書」頁面後，按 Enter 保存 `login_state.json`。
+python -m scripts.login_save_cookie
+⚠️ 登入 104 統一入口網站，完成驗證、跳轉到「私人秘書」頁面後，按 Enter 保存 login_state.json。
 
-4. 執行主程式（自動打卡）
-   ```bash
-   bat\clockin_start.bat
-   ```
+執行主程式（自動打卡）
 
-5. 檢查 Cookie 過期提醒
-   ```bash
-   bat\run_check_cookie.bat
-   ```
+bat\clockin_start.bat
+檢查 Cookie 過期提醒
 
-6. 顯示專案資料夾結構
-   ```bash
-   bat\show_structure.bat
-   ```
+bat\run_check_cookie.bat
+顯示專案資料夾結構
 
----
+bat\show_structure.bat
+📦 資料夾結構
 
-## 📦 資料夾結構
-
-```
 clockin-bot/
 │
 ├── bat/                  # 各種啟動批次檔 (.bat)
@@ -80,56 +67,56 @@ clockin-bot/
 ├── README.md             # 使用說明（本文件）
 ├── .gitignore            # 忽略設定
 └── print_clean_structure.py  # 顯示資料夾結構的小工具
-```
+🆕 版本變更紀錄（CHANGELOG）
+🟢 Clockin-Bot v1.3（功能強化版）
+🛠 打卡成功判斷方式升級：打卡按鈕按下後，比對新出現元素內容是否包含「打卡成功」，避免誤判。
 
----
+🛠 新增重試機制：打卡失敗最多自動重試三次，提升成功率。
 
-## 🆕 版本變更紀錄（CHANGELOG）
+🛠 其他結構與流程保持與 v1.2 相同，無需更改使用方式。
 
-### 🔵 Clockin-Bot v1.1（初版）
+🔵 Clockin-Bot v1.2（功能優化版）
+🛠 全專案路徑改為「旗標式路徑」，提升跨平台穩定性
 
-- 支援 104 打卡自動化流程
-- 智能 OCR 辨識 VPN 連線狀態
-- 假日排除（國定假日、自訂排除日）
-- Telegram 訊息推送打卡結果
-- 自動檢查 Cookie 有效期（提前通知過期）
+🛠 完整分離主控流程與子模組，提高可維護性
 
----
+🛠 Scheduler 主程式強化假日判斷 ➔ 連 VPN 前先判斷
 
-### 🟢 Clockin-Bot v1.2（功能優化版）
+🛠 Outline智能控制新增「已連線」檢查（避免重複操作）
 
-- 🛠 全專案路徑改為「旗標式路徑」，提升跨平台穩定性
-- 🛠 完整分離主控流程與子模組，提高可維護性
-- 🛠 Scheduler 主程式強化假日判斷 ➔ 連 VPN 前先判斷
-- 🛠 Outline智能控制新增「已連線」檢查（避免重複操作）
-- 🛠 Disconnect邏輯優化：中斷確認成功後才關閉程式
-- 🛠 加入「資料夾結構列印」小工具（print_clean_structure.py）
-- 🛠 新增快速全功能模擬測試 (clockin_test_fullflow.py)
-- 🛠 README.md、requirements.txt 重新整理，提升易用性
-- 🛠 .gitignore 規範化，保持專案乾淨
+🛠 Disconnect邏輯優化：中斷確認成功後才關閉程式
 
----
+🛠 加入「資料夾結構列印」小工具（print_clean_structure.py）
 
-## 📬 Telegram通知說明
-- 打卡成功/失敗、VPN連線錯誤，都會即時推送訊息到你的 Telegram 頻道。
-- 請在 `scripts/config.py` 中設定你的 `TELEGRAM_BOT_TOKEN` 與 `TELEGRAM_CHAT_ID`。
+🛠 新增快速全功能模擬測試 (clockin_test_fullflow.py)
 
----
+🛠 README.md、requirements.txt 重新整理，提升易用性
 
-## 📅 假日與手動排除設定
-- `data/holidays_2025.json`：行政院公布之國定假日（自動判斷）
-- `data/manual_skip_days.json`：自訂要排除的特殊日期（可手動編輯）
+🛠 .gitignore 規範化，保持專案乾淨
 
----
+📬 Telegram通知說明
+打卡成功/失敗、VPN連線錯誤，都會即時推送訊息到你的 Telegram 頻道。
 
-## ⚙️ 其他注意事項
-- 必須有 `Outline` 桌面捷徑 (Outline.lnk) 在桌面上。
-- 打卡網址設定為：https://pro.104.com.tw/psc2?m=b&m=b,b,b
-- Playwright自動化操作，請保持Chrome Driver與瀏覽器版本相容。
+請在 scripts/config.py 中設定你的 TELEGRAM_BOT_TOKEN 與 TELEGRAM_CHAT_ID。
 
----
+📅 假日與手動排除設定
+data/holidays_2025.json：行政院公布之國定假日（自動判斷）
 
-> 本專案為個人自動化練習用途，請勿用於非法或商業用途。
+data/manual_skip_days.json：自訂要排除的特殊日期（可手動編輯）
+
+⚙️ 其他注意事項
+必須有 Outline 桌面捷徑 (Outline.lnk) 在桌面上。
+
+打卡網址設定為：https://pro.104.com.tw/psc2?m=b&m=b,b,b
+
+Playwright自動化操作，請保持Chrome Driver與瀏覽器版本相容。
+
+本專案為個人自動化練習用途，請勿用於非法或商業用途。
+
+
+
+
+
 
 
 

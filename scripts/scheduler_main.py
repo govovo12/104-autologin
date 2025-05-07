@@ -14,7 +14,7 @@ if __name__ == "__main__":
     vpn_connected = connect_outline_vpn()   # ✅ 必須判斷 VPN 有成功連上！
 
     if vpn_connected:
-        #random_delay()  # ✅ 隨機延遲
+        random_delay()  # ✅ 隨機延遲
         clockin_success = clockin_104()  # ✅ 執行打卡
 
         if clockin_success:
