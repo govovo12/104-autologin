@@ -1,97 +1,106 @@
-import time
-import datetime
+import sys
+import sys
 from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from pathlib import Path
+from datetime import datetime
 from playwright.sync_api import sync_playwright
 from scripts.telegram_notify import send_telegram_message
 
-# === 設定旗標路徑 ===
 BASE_DIR = Path(__file__).resolve().parent.parent
 STORAGE_STATE_PATH = BASE_DIR / "data" / "login_state.json"
 
-# --- 判斷是否打卡成功（比對新出現元素）
-def is_clockin_success(page, old_elements):
-    try:
-        current_elements = set(page.locator("._2_body").all_inner_texts())
-        new_elements = current_elements - old_elements  # 比對新增元素
-        print("🆕 新出現的元素內容：", new_elements)
-        return any("打卡成功" in text for text in new_elements)
-    except Exception as e:
-        print(f"❌ 比對打卡成功時發生錯誤：{e}")
-        return False
+def write_log(message):
+    log_dir = BASE_DIR / "logs"
+    log_dir.mkdir(exist_ok=True)
+    log_path = log_dir / f"clockin_{datetime.now().date()}.log"
+    with open(log_path, "a", encoding="utf-8") as log_file:
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log_file.write(f"[{timestamp}] {message}\n")
 
-# --- 主打卡流程 ---
 def clockin_104():
-    today = datetime.datetime.today().weekday()
+    print("🚀 啟動正式打卡流程（104）...")
 
-    with sync_playwright() as p:
-        browser = None
-        context = None
-        page = None
-        success = False
-
-        try:
+    try:
+        with sync_playwright() as p:
             browser = p.chromium.launch(headless=False)
             context = browser.new_context(storage_state=str(STORAGE_STATE_PATH))
             page = context.new_page()
 
-            print("🌐 開啟私人秘書打卡頁...")
+            print("🌐 導向打卡頁面...")
             page.goto("https://pro.104.com.tw/psc2?m=b&m=b,b,b")
             page.wait_for_load_state("networkidle")
-            page.wait_for_timeout(5000)
+            page.wait_for_timeout(3000)  # 等待登入狀態與 session 生效
 
-            print("🔍 打卡頁面載入完成，開始嘗試打卡...")
-
-            for attempt in range(3):
-                print(f"🔁 嘗試第 {attempt + 1} 次打卡...")
+            max_attempts = 3
+            for attempt in range(1, max_attempts + 1):
+                print(f"🔁 第 {attempt} 次打卡嘗試...")
 
                 try:
-                    # 打卡前先抓現有的._2_body文字
-                    old_elements = set(page.locator("._2_body").all_inner_texts())
+                    with page.expect_response("**/api/f0400/newClockin", timeout=10000) as response_info:
+                        page.evaluate("""
+                            fetch("https://pro.104.com.tw/psc2/api/f0400/newClockin", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                }
+                            })
+                        """)
+                        print("🛰️ 已發送打卡請求，等待回應...")
 
-                    button = page.locator(":text('打卡')").nth(5)
-                    button.click()
-                    print("🖱️ 打卡按鈕點擊完成，開始等待新提示...")
+                    response = response_info.value
+                    json_data = response.json()
 
-                    found_success = False
-
-                    for wait_time in range(10):  # 最多等10秒，每秒比對一次
-                        if is_clockin_success(page, old_elements):
-                            found_success = True
+                    if json_data.get("code") == 200 and json_data.get("message") == "OK":
+                        att_id = json_data.get("data", {}).get("overAttCardDataId")
+                        if att_id:
+                            msg = f"✅ 打卡成功（ID: {att_id}）"
+                            print(msg)
+                            send_telegram_message("✅ [104] 打卡成功！")
+                            write_log(msg)
                             break
-                        time.sleep(1)
-
-                    if found_success:
-                        print("🎉 打卡成功！")
-                        send_telegram_message("🎉 104 打卡成功！（已自動完成）")
-                        success = True
-                        break
+                        else:
+                            err = "⚠️ API 回傳成功但無打卡 ID"
+                            print(err)
+                            send_telegram_message(err)
+                            write_log(err)
                     else:
-                        print("⚠️ 10秒內沒有新的打卡成功提示，準備下一次嘗試...")
+                        err = f"⚠️ API 回應異常：{json_data}"
+                        print(err)
+                        send_telegram_message("⚠️ 打卡 API 回應異常")
+                        write_log(err)
 
                 except Exception as e:
-                    print(f"❌ 第 {attempt + 1} 次打卡出錯：{e}")
+                    err = f"❌ 打卡錯誤：{e}"
+                    print(err)
+                    send_telegram_message("❌ 打卡 API 發送或解析失敗")
+                    write_log(err)
 
-            if not success:
-                print("🆘 三次打卡都失敗")
-                send_telegram_message("❗️104 打卡失敗（重試三次仍未成功）")
+            else:
+                send_telegram_message("❌ 所有打卡嘗試皆失敗")
+                write_log("❌ 所有打卡嘗試皆失敗")
 
-            page.screenshot(path=str(BASE_DIR / "clockin_result.png"))
+            context.close()
+            browser.close()
+            return True
 
-        except Exception as e:
-            print(f"❗ 打卡主流程異常：{e}")
-
-        finally:
-            if page:
-                page.close()
-            if context:
-                context.close()
-            if browser:
-                browser.close()
-
-    return success
+    except Exception as e:
+        print(f"⚠️ 發生錯誤：{e}")
+        send_telegram_message(f"⚠️ 打卡腳本發生錯誤：{e}")
+        write_log(f"⚠️ 發生錯誤：{e}")
+        return False
 
 if __name__ == "__main__":
     clockin_104()
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,43 +1,68 @@
 from pathlib import Path
-from vpn_outline_connect.connect_outline_vpn import connect_outline_vpn, disconnect_outline_vpn
-from scripts.telegram_notify import send_telegram_message
 from playwright.sync_api import sync_playwright
 
-# === 旗標路徑設定 ===
-BASE_DIR = Path(__file__).resolve().parent.parent
-STORAGE_STATE_PATH = BASE_DIR / "data" / "login_state.json"
+BASE_DIR = Path(__file__).resolve().parent
+STORAGE_STATE_PATH = BASE_DIR.parent / "data" / "login_state.json"
+
+CLOCKIN_API_URL = "https://pro.104.com.tw/psc2/api/f0400/newClockin"
 
 def clockin_test_fullflow():
-    """模擬完整打卡流程（含VPN開啟連線，但不點打卡，只發TG訊息）"""
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False)
+        context = browser.new_context(storage_state=str(STORAGE_STATE_PATH))
+        page = context.new_page()
 
-    print("🚀 啟動模擬打卡流程（包含VPN開啟）...")
+        print("🚀 開啟打卡頁面...")
+        page.goto("https://pro.104.com.tw/psc2?m=b&m=b,b,b")
+        page.wait_for_load_state("networkidle")
 
-    vpn_connected = connect_outline_vpn()
+        print("🕒 嘗試立即送出打卡 API...")
+        try:
+            with page.expect_response(CLOCKIN_API_URL, timeout=10000) as response_info:
+                page.evaluate(f'''
+                    fetch("{CLOCKIN_API_URL}", {{
+                        method: "POST",
+                        headers: {{
+                            "Content-Type": "application/json"
+                        }}
+                    }})
+                ''')
 
-    if vpn_connected:
-        print("✅ VPN連線成功，開始模擬打卡...")
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=False)
-            context = browser.new_context(storage_state=str(STORAGE_STATE_PATH))
-            page = context.new_page()
+                response = response_info.value
+                json_data = response.json()
 
-            page.goto("https://pro.104.com.tw/psc2?m=b&m=b,b,b")
-            page.wait_for_load_state("networkidle")
-            page.wait_for_timeout(3000)  # 等三秒讓網頁穩定
+                print("📌 打卡 API 回應：", json_data)
 
-            # ⚠️ 不真的打卡，只是進頁面
-            print("✅ 模擬打卡成功，發送TG通知...")
-            send_telegram_message("✅ 測試模式：完整打卡流程模擬完成（未實際打卡）")
+        except Exception as e:
+            print("❌ 打卡 API 發送失敗：", e)
 
-            browser.close()
-
-        print("🛑 中斷VPN連線...")
-        disconnect_outline_vpn()
-
-    else:
-        print("❌ VPN連線失敗，中止流程")
-        send_telegram_message("❌ 測試模式：VPN連線失敗，中止打卡流程")
+        context.close()
+        browser.close()
 
 if __name__ == "__main__":
     clockin_test_fullflow()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
