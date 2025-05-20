@@ -1,0 +1,26 @@
+name: Test VPN Connection
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-vpn:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Install Shadowsocks (sslocal)
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y shadowsocks-libev
+
+    - name: Run ss-local with config
+      run: |
+        nohup ss-local -c clockin_bot/vpn/ss_config.json > ss.log 2>&1 &
+        sleep 5
+
+    - name: Test VPN connection via SOCKS5
+      run: |
+        curl -x socks5h://127.0.0.1:1080 https://ipinfo.io/ip || true
