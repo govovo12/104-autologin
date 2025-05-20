@@ -1,0 +1,8 @@
+README.md
+setup.py
+clockin_bot/__init__.py
+clockin_bot/print_clean_structure.py
+clockin_bot.egg-info/PKG-INFO
+clockin_bot.egg-info/SOURCES.txt
+clockin_bot.egg-info/dependency_links.txt
+clockin_bot.egg-info/top_level.txt

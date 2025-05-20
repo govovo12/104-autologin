@@ -1,12 +1,24 @@
+# === Python 自動產生 ===
 __pycache__/
 *.pyc
-*.log
+*.pyo
+*.pyd
+.venv/
 venv/
-.vscode/
-playwright-report/
-*.webm
-trace.zip
+
+# === 本地 log 與紀錄檔 ===
+logs/
+*.log
+*.html
+
+# === Cookie 與登入 session（避免洩漏）===
 data/login_state.json
 
+# === bat 啟動工具（本地用，不上雲）===
+bat/
 
+# === 輔助工具（僅限 CLI 開發時使用）===
+print_clean_structure.py
+tools/view_latest_log.py
 
+.env
