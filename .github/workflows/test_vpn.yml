@@ -1,4 +1,4 @@
-name: Test VPN Connection
+name: Test VPN Connection 
 
 on:
   workflow_dispatch:
