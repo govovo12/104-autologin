@@ -1,0 +1,29 @@
+name: Clockin-Bot CI
+
+on:
+  workflow_dispatch:         # 手動觸發
+  schedule:
+    - cron: '0 1 * * 1-5'     # 每週一到五台北早上 9:00（UTC+8 = UTC 1:00）
+
+jobs:
+  run-clockin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✅ Checkout repo
+        uses: actions/checkout@v3
+
+      - name: ✅ Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: ✅ Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install
+
+      - name: ✅ Run Clockin Script
+        run: |
+          python run_clockin.py
