@@ -1,9 +1,13 @@
 name: Clockin Bot
 
 on:
+  push:
+    branches:
+      - main
+      - exp/cookie-direct-test  # 這行讓你目前的分支也被 GitHub Actions 認得
   workflow_dispatch:
   schedule:
-    - cron: '0 1 * * 1-5'
+    - cron: '0 1 * * 1-5'  # 台北時間早上 9:00（UTC+8）
 
 jobs:
   run-clockin:
@@ -28,5 +32,5 @@ jobs:
           echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> .env
           echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> .env
 
-      - name: Run clockin
+      - name: Run clockin script
         run: python run_clockin.py
