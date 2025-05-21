@@ -1,23 +1,10 @@
 certifi==2025.4.26
 charset-normalizer==3.4.2
--e git+https://github.com/govovo12/104-autologin.git@fbe895a90c1c1281498c4a58363c9ec091af4907#egg=clockin_bot
 greenlet==3.2.2
 idna==3.10
-MouseInfo==0.1.3
-numpy==2.2.5
-opencv-python==4.11.0.86
-pillow==11.2.1
 playwright==1.52.0
 psutil==7.0.0
-PyAutoGUI==0.9.54
-pyee==13.0.0
-PyGetWindow==0.0.9
-PyMsgBox==1.0.9
-pyperclip==1.9.0
-PyRect==0.2.0
-PyScreeze==1.0.1
 python-dotenv==1.1.0
-pytweening==1.2.0
 requests==2.32.3
 typing_extensions==4.13.2
 urllib3==2.4.0
