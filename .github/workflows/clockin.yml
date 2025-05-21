@@ -4,33 +4,33 @@ on:
   push:
     branches:
       - main
-      - exp/cookie-direct-test  # 這行讓你目前的分支也被 GitHub Actions 認得
+      - exp/cookie-direct-test
   workflow_dispatch:
   schedule:
-    - cron: '0 1 * * 1-5'  # 台北時間早上 9:00（UTC+8）
+    - cron: '0 1 * * 1-5'  # 每週一至五，台北時間 09:00（UTC+8）
 
 jobs:
   run-clockin:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: ✅ Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Python
+      - name: ✅ Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: ✅ Install dependencies
         run: |
           pip install -r requirements.txt
           playwright install
 
-      - name: Inject secrets
+      - name: 🔐 Inject secrets into .env
         run: |
           echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> .env
           echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> .env
 
-      - name: Run clockin script
-        run: python run_clockin.py
+      - name: 🚀 Run clockin_104.py directly
+        run: python -m clockin_bot.clockin.clockin_104
