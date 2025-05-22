@@ -33,6 +33,26 @@ def clockin_104():
             context = browser.new_context(storage_state=str(STORAGE_STATE_PATH))
             page = context.new_page()
 
+            # === Debug 全域 Request/Response 紀錄 ===
+            def log_request(request):
+                print(f"[REQUEST] {request.method} {request.url}")
+
+            def log_response(response):
+                print(f"[RESPONSE] {response.status} {response.url}")
+                try:
+                    headers = response.headers
+                    print("[RESPONSE HEADERS]")
+                    for k, v in headers.items():
+                        print(f"{k}: {v}")
+                    body = response.text()
+                    print(f"[RESPONSE BODY] {body[:500]}...")
+                except Exception as e:
+                    print(f"[RESPONSE ERROR] 無法取得 response body: {e}")
+
+            page.on("request", log_request)
+            page.on("response", log_response)
+            # === End Debug ===
+
             log.info("打卡頁面導向中...")
             page.goto("https://pro.104.com.tw/psc2?m=b,m,b,b")
             page.wait_for_timeout(5000)
@@ -43,17 +63,27 @@ def clockin_104():
 
                 try:
                     with page.expect_response("**/api/f0400/newClockin", timeout=10000) as response_info:
-                        page.evaluate("""
-                            fetch("https://pro.104.com.tw/psc2/api/f0400/newClockin", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                }
-                            })
-                        """)
+                        page.evaluate("""fetch("https://pro.104.com.tw/psc2/api/f0400/newClockin", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" }
+                        })""")
                         log.info("已發出打卡請求，等待回應...")
 
                     response = response_info.value
+
+                    # === DEBUG: 印 response 詳細內容 ===
+                    print(f"[DEBUG] STATUS: {response.status}")
+                    print(f"[DEBUG] URL: {response.url}")
+                    print("[DEBUG] HEADERS:")
+                    for k, v in response.headers.items():
+                        print(f"    {k}: {v}")
+                    try:
+                        print("[DEBUG] RAW BODY:")
+                        print(response.text())
+                    except Exception as e:
+                        print(f"[DEBUG] Failed to read body: {e}")
+                    # === End DEBUG ===
+
                     json_data = response.json()
 
                     if json_data.get("code") == 200 and json_data.get("message") == "OK":
@@ -63,30 +93,28 @@ def clockin_104():
                             log.info(msg)
                             send_telegram_message(f"✅ [104] {msg}")
                             write_log(msg)
-
-                            log.info("打卡成功後等待5秒...")
                             page.wait_for_timeout(5000)
                             break
                         else:
-                            err = "API回傳成功，但未取得打卡ID"
+                            err = "API 回傳成功，但未取得打卡 ID"
                             log.warning(err)
                             send_telegram_message(err)
                             write_log(err)
                     else:
-                        err = f"API回傳異常：{json_data}"
+                        err = f"API 回傳異常：{json_data}"
                         log.warning(err)
-                        send_telegram_message("⚠️ 104打卡API異常")
+                        send_telegram_message("⚠️ 104 打卡 API 回傳異常")
                         write_log(err)
 
                 except Exception as e:
                     err = f"打卡時發生例外錯誤：{e}"
                     log.error(err)
-                    send_telegram_message("❌ 104打卡API請求失敗")
+                    send_telegram_message("❌ 104 打卡 API 請求失敗")
                     write_log(err)
 
             else:
-                send_telegram_message("❌ 104打卡三次嘗試均失敗")
-                write_log("104打卡三次嘗試均失敗")
+                send_telegram_message("❌ 104 打卡三次嘗試均失敗")
+                write_log("104 打卡三次嘗試均失敗")
 
             context.close()
             browser.close()
@@ -94,26 +122,9 @@ def clockin_104():
 
     except Exception as e:
         log.error(f"打卡流程發生錯誤：{e}")
-        send_telegram_message(f"❌ 104打卡流程發生錯誤：{e}")
+        send_telegram_message(f"❌ 104 打卡流程發生錯誤：{e}")
         write_log(f"打卡流程發生錯誤：{e}")
         return False
 
 if __name__ == "__main__":
     clockin_104()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
