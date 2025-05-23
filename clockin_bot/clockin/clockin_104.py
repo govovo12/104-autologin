@@ -20,6 +20,11 @@ headers = {
     "cookie": COOKIE_HEADER
 }
 
+proxies = {
+    "http": "socks5h://127.0.0.1:1080",
+    "https": "socks5h://127.0.0.1:1080"
+}
+
 @log_call
 def write_log(message):
     log.info(message)
@@ -31,6 +36,7 @@ def clockin_104():
         response = requests.post(
             "https://pro.104.com.tw/psc2/api/f0400/newClockin",
             headers=headers,
+            proxies=proxies,  # ✅ 補上這一行才會真的透過 SS 發送請求
             timeout=10
         )
 
@@ -62,11 +68,6 @@ def clockin_104():
     send_telegram_message(f"❌ 104 打卡失敗：{err}")
     write_log(err)
     return False
-
-proxies = {
-    "http": "socks5h://127.0.0.1:1080",
-    "https": "socks5h://127.0.0.1:1080"
-}
 
 __task_info__ = {
     "name": "clockin_104",

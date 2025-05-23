@@ -4,7 +4,8 @@ import requests
 from clockin_bot.config.config import TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 
 # GitHub Pages 設定（若未來想改路徑，改這個變數即可）
-REPORT_URL = "https://govovo12.github.io/104-autologin/latest_log_view.html"
+REPORT_URL = "https://govovo12.github.io/104-autologin/docs/latest_log_view.html"
+
 
 def send_telegram_message(message: str):
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
