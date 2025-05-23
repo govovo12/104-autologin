@@ -1,73 +1,60 @@
 import sys
-from datetime import datetime
-from pathlib import Path
-import shutil
-from tools.env_loader import *
-
 from clockin_bot.logger.logger import get_logger
-from clockin_bot.notify.telegram_notify import send_telegram_message
+from clockin_bot.logger.decorators import log_call
 from clockin_bot.vpn.connect_ss_local import start_vpn, is_vpn_connected
 from clockin_bot.clockin.clockin_104 import clockin_104
-from clockin_bot.tools.utils_delay import random_delay
+from clockin_bot.session.check_cookie_expiry_v2 import check_cookie_expiry
 from clockin_bot.tools.utils_holiday import is_today_holiday
+from clockin_bot.tools.utils_delay import random_delay
+from clockin_bot.tools.view_latest_log import view_latest_log_html
+from clockin_bot.tools.upload_log_to_pages import upload_log_only
+from clockin_bot.notify.telegram_notify import send_telegram_message
 
 log = get_logger("scheduler")
 
-def copy_latest_log():
-    base_dir = Path(__file__).resolve().parent.parent.parent
-    log_dir = base_dir / "logs"
-    today_str = datetime.now().strftime("%Y-%m-%d")
-    src = log_dir / f"clockin_{today_str}.log"
-    dst = log_dir / "latest_run.log"
-    try:
-        shutil.copy(src, dst)
-    except Exception as e:
-        log.warning(f"❌ 複製 latest_run.log 失敗：{e}")
-
+@log_call
 def main():
-    log.info("[1] Scheduler 主控流程啟動")
     log.info("[1] 開始執行 scheduler_main")
 
     if is_today_holiday():
-        log.info("[2] 今天是休假日，停止執行打卡流程")
-        send_telegram_message("⚠️ 今天是假日，系統停止打卡，不執行任何動作。")
-        copy_latest_log()
-        sys.exit(0)
+        log.info("[2] 今天是假日或排除日，結束流程")
+        return
 
     log.info("[3] 準備啟動 VPN（ss-local）")
     start_vpn()
 
-    vpn_connected = is_vpn_connected()
+    if not is_vpn_connected():
+        log.error("[4] VPN 未成功啟動，結束流程")
+        send_telegram_message("❌ VPN 啟動確認失敗，系統結束流程。")
+        return
 
-    if vpn_connected:
-        log.info("[4] VPN 啟動成功，開始打卡流程")
-        clockin_success = clockin_104()
-        log.info(f"[5] 打卡結果：{clockin_success}")
+    log.info("[5] VPN 啟動成功，準備執行打卡流程（含重試機制）")
+    send_telegram_message("✅ VPN 已啟動並成功連線，準備開始打卡流程")
 
-        if clockin_success:
-            log.info("[6] 打卡成功")
-        else:
-            log.warning("[7] 打卡失敗，發送通知")
-            send_telegram_message("⚠️ 打卡失敗，請檢查系統後續狀況。")
-    else:
-        log.error("[8] VPN 啟動失敗，系統終止打卡流程")
-        send_telegram_message("❌ VPN 啟動失敗，打卡流程中止。")
+    #random_delay()
 
-    copy_latest_log()
+    MAX_RETRY = 3
+    clockin_success = False
+    for attempt in range(1, MAX_RETRY + 1):
+        log.info(f"[5-R{attempt}] 執行打卡流程（第 {attempt} 次嘗試）")
+        if clockin_104():
+            clockin_success = True
+            log.info(f"[6] 打卡成功（第 {attempt} 次）")
+            send_telegram_message(f"✅ 打卡成功（第 {attempt} 次）")
+            break
 
-if __name__ == "__main__":
-    main()
+    if not clockin_success:
+        log.error("[6] 多次打卡仍失敗，結束流程")
+        send_telegram_message("❌ 打卡流程失敗，請查閱 log")
 
+    # ⬇️ 最後流程：產生報告、上傳
+    view_latest_log_html()
+    upload_log_only()
 
-
-
-
-
-    
-
-
-
-
-
+__task_info__ = {
+    "name": "scheduler_main",
+    "desc": "主控流程：假日排除 → 啟動 VPN → 執行打卡（含 retry） → 發送通知",
+    "entry": main,
+}
 
 

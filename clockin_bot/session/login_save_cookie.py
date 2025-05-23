@@ -27,12 +27,8 @@ def save_login_cookie():
 
         browser.close()
 
-if __name__ == "__main__":
-    save_login_cookie()
-
-
-
-
-
-
-
+__task_info__ = {
+    "name": "login_save_cookie",
+    "desc": "使用 Playwright 開啟 104，手動登入後儲存 cookie 至 login_state.json",
+    "entry": save_login_cookie,
+}

@@ -2,8 +2,8 @@ import os
 import webbrowser
 from pathlib import Path
 
-def main():
-    logs_dir = Path(__file__).resolve().parent.parent / "logs"
+def view_latest_log_html():
+    logs_dir = Path(__file__).resolve().parent.parent.parent / "logs"
     if not logs_dir.exists():
         print("logs 資料夾不存在")
         return
@@ -27,9 +27,12 @@ def main():
     with open(html_output, "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    webbrowser.open(f"file:///{html_output.as_posix()}")
-    print(f"已開啟最新 log：{latest_log.name}")
+    
+    print(f"✅ 已開啟最新 log：{latest_log.name}")
+    
 
-if __name__ == "__main__":
-    main()
-
+__task_info__ = {
+    "name": "view_latest_log",
+    "desc": "以瀏覽器開啟最新執行 log（HTML 格式）",
+    "entry": view_latest_log_html
+}

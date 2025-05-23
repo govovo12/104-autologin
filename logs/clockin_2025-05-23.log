@@ -1,0 +1,421 @@
+[2025-05-23 09:59:44] 開始呼叫函式：clockin_104
+[2025-05-23 09:59:44] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 09:59:45] 回傳狀態：200
+[2025-05-23 09:59:45] 回傳內容：{"code": 401, "message": "Unauthorized", "data": {}}
+[2025-05-23 09:59:45] 打卡失敗，狀態碼：200，內容：{'code': 401, 'message': 'Unauthorized', 'data': {}}
+[2025-05-23 09:59:45] 開始呼叫函式：send_telegram_message
+[2025-05-23 09:59:45] 發送 Telegram 訊息失敗: 404 Client Error: Not Found for url: https://api.telegram.org/botNone/sendMessage
+[2025-05-23 09:59:45] 函式結束執行：send_telegram_message
+[2025-05-23 09:59:45] 開始呼叫函式：write_log
+[2025-05-23 09:59:45] 打卡失敗，狀態碼：200，內容：{'code': 401, 'message': 'Unauthorized', 'data': {}}
+[2025-05-23 09:59:45] 函式結束執行：write_log
+[2025-05-23 09:59:45] 函式結束執行：clockin_104
+[2025-05-23 10:09:53] 開始呼叫函式：clockin_104
+[2025-05-23 10:09:53] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 10:09:54] 回傳狀態：200
+[2025-05-23 10:09:54] 回傳內容：{"code": 401, "message": "Unauthorized", "data": {}}
+[2025-05-23 10:09:54] 打卡失敗，狀態碼：200，內容：{'code': 401, 'message': 'Unauthorized', 'data': {}}
+[2025-05-23 10:09:54] 開始呼叫函式：send_telegram_message
+[2025-05-23 10:09:54] 發送 Telegram 訊息失敗: 404 Client Error: Not Found for url: https://api.telegram.org/botNone/sendMessage
+[2025-05-23 10:09:54] 函式結束執行：send_telegram_message
+[2025-05-23 10:09:54] 開始呼叫函式：write_log
+[2025-05-23 10:09:54] 打卡失敗，狀態碼：200，內容：{'code': 401, 'message': 'Unauthorized', 'data': {}}
+[2025-05-23 10:09:54] 函式結束執行：write_log
+[2025-05-23 10:09:54] 函式結束執行：clockin_104
+[2025-05-23 10:15:00] 開始呼叫函式：check_cookie_expiry
+[2025-05-23 10:15:00] 檢查 cookie 時發生錯誤：[Errno 22] Invalid argument
+[2025-05-23 10:15:00] 開始呼叫函式：send_telegram_message
+[2025-05-23 10:15:01] 發送 Telegram 訊息失敗: 404 Client Error: Not Found for url: https://api.telegram.org/botNone/sendMessage
+[2025-05-23 10:15:01] 函式結束執行：send_telegram_message
+[2025-05-23 10:15:01] 函式結束執行：check_cookie_expiry
+[2025-05-23 10:18:08] 開始呼叫函式：save_login_cookie
+[2025-05-23 10:18:26] 開啟 104 私人秘書頁面，請完成登入...
+[2025-05-23 10:19:26] 登入狀態已保存至 C:\Users\user\Desktop\104-autologin\clockin_bot\data\login_state.json
+[2025-05-23 10:19:26] 已將 cookie header 寫入 C:\Users\user\Desktop\104-autologin\clockin_bot\data\cookie_header.json，可用於 requests
+[2025-05-23 10:19:26] 函式結束執行：save_login_cookie
+[2025-05-23 10:20:50] 開始呼叫函式：save_login_cookie
+[2025-05-23 10:20:51] 開啟 104 私人秘書頁面，請完成登入...
+[2025-05-23 10:21:40] 登入狀態已保存至 C:\Users\user\Desktop\104-autologin\clockin_bot\data\login_state.json
+[2025-05-23 10:21:40] 已將 cookie header 寫入 C:\Users\user\Desktop\104-autologin\clockin_bot\data\cookie_header.json，可用於 requests
+[2025-05-23 10:21:40] 函式結束執行：save_login_cookie
+[2025-05-23 10:23:30] 開始呼叫函式：clockin_104
+[2025-05-23 10:23:30] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 10:23:31] 回傳狀態：200
+[2025-05-23 10:23:31] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 68888079936561}}
+[2025-05-23 10:23:31] 打卡成功！(ID: 68888079936561)
+[2025-05-23 10:23:31] 開始呼叫函式：send_telegram_message
+[2025-05-23 10:23:32] 發送 Telegram 訊息失敗: 404 Client Error: Not Found for url: https://api.telegram.org/botNone/sendMessage
+[2025-05-23 10:23:32] 函式結束執行：send_telegram_message
+[2025-05-23 10:23:32] 開始呼叫函式：write_log
+[2025-05-23 10:23:32] 打卡成功！(ID: 68888079936561)
+[2025-05-23 10:23:32] 函式結束執行：write_log
+[2025-05-23 10:23:32] 函式結束執行：clockin_104
+[2025-05-23 10:27:57] 開始呼叫函式：clockin_104
+[2025-05-23 10:27:57] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 10:27:57] 回傳狀態：200
+[2025-05-23 10:27:57] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 128559789098264}}
+[2025-05-23 10:27:57] 打卡成功！(ID: 128559789098264)
+[2025-05-23 10:27:57] 開始呼叫函式：send_telegram_message
+[2025-05-23 10:27:58] 發送 Telegram 訊息失敗: 404 Client Error: Not Found for url: https://api.telegram.org/botNone/sendMessage
+[2025-05-23 10:27:58] 函式結束執行：send_telegram_message
+[2025-05-23 10:27:58] 開始呼叫函式：write_log
+[2025-05-23 10:27:58] 打卡成功！(ID: 128559789098264)
+[2025-05-23 10:27:58] 函式結束執行：write_log
+[2025-05-23 10:27:58] 函式結束執行：clockin_104
+[2025-05-23 10:28:35] 開始呼叫函式：clockin_104
+[2025-05-23 10:28:35] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 10:28:36] 回傳狀態：200
+[2025-05-23 10:28:36] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 655110324767174}}
+[2025-05-23 10:28:36] 打卡成功！(ID: 655110324767174)
+[2025-05-23 10:28:36] 開始呼叫函式：send_telegram_message
+[2025-05-23 10:28:37] 發送 Telegram 訊息失敗: 404 Client Error: Not Found for url: https://api.telegram.org/botNone/sendMessage
+[2025-05-23 10:28:37] 函式結束執行：send_telegram_message
+[2025-05-23 10:28:37] 開始呼叫函式：write_log
+[2025-05-23 10:28:37] 打卡成功！(ID: 655110324767174)
+[2025-05-23 10:28:37] 函式結束執行：write_log
+[2025-05-23 10:28:37] 函式結束執行：clockin_104
+[2025-05-23 10:29:38] 開始呼叫函式：clockin_104
+[2025-05-23 10:29:38] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 10:29:39] 回傳狀態：200
+[2025-05-23 10:29:39] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 495330537617151}}
+[2025-05-23 10:29:39] 打卡成功！(ID: 495330537617151)
+[2025-05-23 10:29:39] 開始呼叫函式：send_telegram_message
+[2025-05-23 10:29:40] 成功發送 Telegram 訊息
+[2025-05-23 10:29:40] 函式結束執行：send_telegram_message
+[2025-05-23 10:29:40] 開始呼叫函式：write_log
+[2025-05-23 10:29:40] 打卡成功！(ID: 495330537617151)
+[2025-05-23 10:29:40] 函式結束執行：write_log
+[2025-05-23 10:29:40] 函式結束執行：clockin_104
+[2025-05-23 10:36:43] 開始呼叫函式：check_cookie_expiry
+[2025-05-23 10:36:44] ✅ cookie 有效，伺服器接受身份
+[2025-05-23 10:36:44] 函式結束執行：check_cookie_expiry
+[2025-05-23 10:49:54] 開始呼叫函式：check_cookie_expiry
+[2025-05-23 10:49:54] 檢查 cookie 時發生錯誤：[Errno 22] Invalid argument
+[2025-05-23 10:49:54] 開始呼叫函式：send_telegram_message
+[2025-05-23 10:49:55] 成功發送 Telegram 訊息
+[2025-05-23 10:49:55] 函式結束執行：send_telegram_message
+[2025-05-23 10:49:55] 函式結束執行：check_cookie_expiry
+[2025-05-23 10:51:00] 開始呼叫函式：check_cookie_expiry
+[2025-05-23 10:51:00] connect.sid 的 expires 欄位為無效值（-1），視為已過期
+[2025-05-23 10:51:00] 開始呼叫函式：send_telegram_message
+[2025-05-23 10:51:01] 成功發送 Telegram 訊息
+[2025-05-23 10:51:01] 函式結束執行：send_telegram_message
+[2025-05-23 10:51:01] 函式結束執行：check_cookie_expiry
+[2025-05-23 10:55:05] 開始呼叫函式：check_cookie_expiry
+[2025-05-23 10:55:05] _ldbrbid 過期時間：2026-06-27 10:21:36（剩餘 399 天）
+[2025-05-23 10:55:05] ✅ _ldbrbid 尚未過期（剩餘 399 天）
+[2025-05-23 10:55:05] 開始呼叫函式：send_telegram_message
+[2025-05-23 10:55:07] 成功發送 Telegram 訊息
+[2025-05-23 10:55:07] 函式結束執行：send_telegram_message
+[2025-05-23 10:55:07] 函式結束執行：check_cookie_expiry
+[2025-05-23 10:59:01] 開始呼叫函式：clockin_104
+[2025-05-23 10:59:01] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 10:59:01] 回傳狀態：200
+[2025-05-23 10:59:01] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 745154161509821}}
+[2025-05-23 10:59:01] 打卡成功！(ID: 745154161509821)
+[2025-05-23 10:59:01] 開始呼叫函式：send_telegram_message
+[2025-05-23 10:59:02] 成功發送 Telegram 訊息
+[2025-05-23 10:59:02] 函式結束執行：send_telegram_message
+[2025-05-23 10:59:02] 開始呼叫函式：write_log
+[2025-05-23 10:59:02] 打卡成功！(ID: 745154161509821)
+[2025-05-23 10:59:02] 函式結束執行：write_log
+[2025-05-23 10:59:02] 函式結束執行：clockin_104
+[2025-05-23 11:05:44] 開始呼叫函式：clockin_104
+[2025-05-23 11:05:44] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 11:05:45] 回傳狀態：200
+[2025-05-23 11:05:45] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 366678653708101}}
+[2025-05-23 11:05:45] 打卡成功！(ID: 366678653708101)
+[2025-05-23 11:05:45] 開始呼叫函式：send_telegram_message
+[2025-05-23 11:05:46] 成功發送 Telegram 訊息
+[2025-05-23 11:05:46] 函式結束執行：send_telegram_message
+[2025-05-23 11:05:46] 開始呼叫函式：write_log
+[2025-05-23 11:05:46] 打卡成功！(ID: 366678653708101)
+[2025-05-23 11:05:46] 函式結束執行：write_log
+[2025-05-23 11:05:46] 函式結束執行：clockin_104
+[2025-05-23 11:24:50] 開始呼叫函式：check_cookie_expiry
+[2025-05-23 11:24:50] _ldbrbid 過期時間：2026-06-27 10:21:36（剩餘 399 天）
+[2025-05-23 11:24:50] ✅ _ldbrbid 尚未過期（剩餘 399 天）
+[2025-05-23 11:24:50] 開始呼叫函式：send_telegram_message
+[2025-05-23 11:24:51] 成功發送 Telegram 訊息
+[2025-05-23 11:24:51] 函式結束執行：send_telegram_message
+[2025-05-23 11:24:51] 函式結束執行：check_cookie_expiry
+[2025-05-23 11:28:56] 開始呼叫函式：clockin_104
+[2025-05-23 11:28:56] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 11:28:57] 回傳狀態：200
+[2025-05-23 11:28:57] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 456969417502542}}
+[2025-05-23 11:28:57] 打卡成功！(ID: 456969417502542)
+[2025-05-23 11:28:57] 開始呼叫函式：send_telegram_message
+[2025-05-23 11:28:58] 成功發送 Telegram 訊息
+[2025-05-23 11:28:58] 函式結束執行：send_telegram_message
+[2025-05-23 11:28:58] 開始呼叫函式：write_log
+[2025-05-23 11:28:58] 打卡成功！(ID: 456969417502542)
+[2025-05-23 11:28:58] 函式結束執行：write_log
+[2025-05-23 11:28:58] 函式結束執行：clockin_104
+[2025-05-23 11:36:37] 開始呼叫函式：save_login_cookie
+[2025-05-23 11:36:40] 開啟104私人秘書頁面，請完成登入...
+[2025-05-23 11:37:50] 登入狀態已保存至 C:\Users\user\Desktop\104-autologin\clockin_bot\data\login_state.json
+[2025-05-23 11:37:50] 函式結束執行：save_login_cookie
+[2025-05-23 11:59:04] 開始呼叫函式：check_cookie_expiry
+[2025-05-23 11:59:04] _ldbrbid 過期時間：2026-06-27 11:37:48（剩餘 399 天）
+[2025-05-23 11:59:04] ✅ _ldbrbid 尚未過期（剩餘 399 天）
+[2025-05-23 11:59:04] 開始呼叫函式：send_telegram_message
+[2025-05-23 11:59:05] 成功發送 Telegram 訊息
+[2025-05-23 11:59:05] 函式結束執行：send_telegram_message
+[2025-05-23 11:59:05] 函式結束執行：check_cookie_expiry
+[2025-05-23 12:00:54] 開始呼叫函式：save_login_cookie
+[2025-05-23 12:00:55] 開啟104私人秘書頁面，請完成登入...
+[2025-05-23 12:02:31] 登入狀態已保存至 C:\Users\user\Desktop\104-autologin\clockin_bot\data\login_state.json
+[2025-05-23 12:02:31] 函式結束執行：save_login_cookie
+[2025-05-23 12:04:33] 開始呼叫函式：clockin_104
+[2025-05-23 12:04:33] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 12:04:34] 回傳狀態：200
+[2025-05-23 12:04:34] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 393722224229638}}
+[2025-05-23 12:04:34] 打卡成功！(ID: 393722224229638)
+[2025-05-23 12:04:34] 開始呼叫函式：send_telegram_message
+[2025-05-23 12:04:35] 成功發送 Telegram 訊息
+[2025-05-23 12:04:35] 函式結束執行：send_telegram_message
+[2025-05-23 12:04:35] 開始呼叫函式：write_log
+[2025-05-23 12:04:35] 打卡成功！(ID: 393722224229638)
+[2025-05-23 12:04:35] 函式結束執行：write_log
+[2025-05-23 12:04:35] 函式結束執行：clockin_104
+[2025-05-23 13:09:52] 開始呼叫函式：clockin_104
+[2025-05-23 13:09:52] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 13:09:52] 回傳狀態：200
+[2025-05-23 13:09:52] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 391592828447110}}
+[2025-05-23 13:09:52] 打卡成功！(ID: 391592828447110)
+[2025-05-23 13:09:52] 開始呼叫函式：send_telegram_message
+[2025-05-23 13:09:53] 成功發送 Telegram 訊息
+[2025-05-23 13:09:53] 函式結束執行：send_telegram_message
+[2025-05-23 13:09:53] 開始呼叫函式：write_log
+[2025-05-23 13:09:53] 打卡成功！(ID: 391592828447110)
+[2025-05-23 13:09:53] 函式結束執行：write_log
+[2025-05-23 13:09:53] 函式結束執行：clockin_104
+[2025-05-23 13:13:34] 開始呼叫函式：clockin_104
+[2025-05-23 13:13:34] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 13:13:35] 回傳狀態：200
+[2025-05-23 13:13:35] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 762408622791995}}
+[2025-05-23 13:13:35] 打卡成功！(ID: 762408622791995)
+[2025-05-23 13:13:35] 開始呼叫函式：send_telegram_message
+[2025-05-23 13:13:36] 成功發送 Telegram 訊息
+[2025-05-23 13:13:36] 函式結束執行：send_telegram_message
+[2025-05-23 13:13:36] 開始呼叫函式：write_log
+[2025-05-23 13:13:36] 打卡成功！(ID: 762408622791995)
+[2025-05-23 13:13:36] 函式結束執行：write_log
+[2025-05-23 13:13:36] 函式結束執行：clockin_104
+[2025-05-23 13:59:26] 開始呼叫函式：main
+[2025-05-23 13:59:26] [1] Scheduler 主控流程啟動
+[2025-05-23 13:59:26] [1] 開始執行 scheduler_main
+[2025-05-23 13:59:26] 開始呼叫函式：is_today_holiday
+[2025-05-23 13:59:26] 開始檢查日期：20250523 / 2025-05-23
+[2025-05-23 13:59:26] 成功讀取 holidays_2025.json，共 365 筆資料
+[2025-05-23 13:59:26] 成功讀取 manual_skip_days.json，共 1 筆資料
+[2025-05-23 13:59:26] 今天是工作日，繼續執行
+[2025-05-23 13:59:26] 函式結束執行：is_today_holiday
+[2025-05-23 13:59:26] [3] 準備啟動 VPN（ss-local）
+[2025-05-23 14:05:12] 開始呼叫函式：main
+[2025-05-23 14:05:12] [1] Scheduler 主控流程啟動
+[2025-05-23 14:05:12] [1] 開始執行 scheduler_main
+[2025-05-23 14:05:12] 開始呼叫函式：is_today_holiday
+[2025-05-23 14:05:12] 開始檢查日期：20250523 / 2025-05-23
+[2025-05-23 14:05:12] 成功讀取 holidays_2025.json，共 365 筆資料
+[2025-05-23 14:05:12] 成功讀取 manual_skip_days.json，共 1 筆資料
+[2025-05-23 14:05:12] 今天是工作日，繼續執行
+[2025-05-23 14:05:12] 函式結束執行：is_today_holiday
+[2025-05-23 14:05:12] [3] 準備啟動 VPN（ss-local）
+[2025-05-23 14:05:15] [5] VPN 啟動成功，準備執行打卡流程（含重試機制）
+[2025-05-23 14:05:15] 開始呼叫函式：clockin_104
+[2025-05-23 14:05:15] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 14:05:16] 回傳狀態：200
+[2025-05-23 14:05:16] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 375929840916080}}
+[2025-05-23 14:05:16] 打卡成功！(ID: 375929840916080)
+[2025-05-23 14:05:16] 開始呼叫函式：send_telegram_message
+[2025-05-23 14:05:17] 成功發送 Telegram 訊息
+[2025-05-23 14:05:17] 函式結束執行：send_telegram_message
+[2025-05-23 14:05:17] 開始呼叫函式：write_log
+[2025-05-23 14:05:17] 打卡成功！(ID: 375929840916080)
+[2025-05-23 14:05:17] 函式結束執行：write_log
+[2025-05-23 14:05:17] 函式結束執行：clockin_104
+[2025-05-23 14:05:17] [6] 打卡成功（第 1 次）
+[2025-05-23 14:05:17] 開始呼叫函式：send_telegram_message
+[2025-05-23 14:05:18] 成功發送 Telegram 訊息
+[2025-05-23 14:05:18] 函式結束執行：send_telegram_message
+[2025-05-23 14:05:18] 開始呼叫函式：copy_latest_log
+[2025-05-23 14:05:18] 函式結束執行：copy_latest_log
+[2025-05-23 14:05:18] 函式結束執行：main
+[2025-05-23 14:19:18] 開始呼叫函式：clockin_ss_test
+[2025-05-23 14:19:18] 開始執行 Socks5 打卡測試流程...
+[2025-05-23 14:19:20] VPN 打卡流程發生例外錯誤：SOCKSHTTPSConnectionPool(host='pro.104.com.tw', port=443): Max retries exceeded with url: /psc2/api/f0400/newClockin (Caused by NewConnectionError('<urllib3.contrib.socks.SOCKSHTTPSConnection object at 0x0000021A1F554EC0>: Failed to establish a new connection: [WinError 10061] 無法連線，因為目標電腦拒絕連線。'))
+[2025-05-23 14:19:20] 開始呼叫函式：send_telegram_message
+[2025-05-23 14:19:21] 成功發送 Telegram 訊息
+[2025-05-23 14:19:21] 函式結束執行：send_telegram_message
+[2025-05-23 14:19:21] 開始呼叫函式：write_log
+[2025-05-23 14:19:21] VPN 打卡流程發生例外錯誤：SOCKSHTTPSConnectionPool(host='pro.104.com.tw', port=443): Max retries exceeded with url: /psc2/api/f0400/newClockin (Caused by NewConnectionError('<urllib3.contrib.socks.SOCKSHTTPSConnection object at 0x0000021A1F554EC0>: Failed to establish a new connection: [WinError 10061] 無法連線，因為目標電腦拒絕連線。'))
+[2025-05-23 14:19:21] 函式結束執行：write_log
+[2025-05-23 14:19:21] 函式結束執行：clockin_ss_test
+[2025-05-23 14:20:21] 開始呼叫函式：clockin_ss_test
+[2025-05-23 14:20:21] 開始執行 Socks5 打卡測試流程...
+[2025-05-23 14:20:22] 回傳狀態：200
+[2025-05-23 14:20:22] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 307107144562061}}
+[2025-05-23 14:20:22] 代理打卡成功！(ID: 307107144562061)
+[2025-05-23 14:20:22] 開始呼叫函式：send_telegram_message
+[2025-05-23 14:20:23] 成功發送 Telegram 訊息
+[2025-05-23 14:20:23] 函式結束執行：send_telegram_message
+[2025-05-23 14:20:23] 開始呼叫函式：write_log
+[2025-05-23 14:20:23] 代理打卡成功！(ID: 307107144562061)
+[2025-05-23 14:20:23] 函式結束執行：write_log
+[2025-05-23 14:20:23] 函式結束執行：clockin_ss_test
+[2025-05-23 14:21:22] 開始呼叫函式：clockin_ss_test
+[2025-05-23 14:21:22] 開始執行 Socks5 打卡測試流程...
+[2025-05-23 14:21:23] 回傳狀態：200
+[2025-05-23 14:21:23] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 808501428441166}}
+[2025-05-23 14:21:23] 代理打卡成功！(ID: 808501428441166)
+[2025-05-23 14:21:23] 開始呼叫函式：send_telegram_message
+[2025-05-23 14:21:24] 成功發送 Telegram 訊息
+[2025-05-23 14:21:24] 函式結束執行：send_telegram_message
+[2025-05-23 14:21:24] 開始呼叫函式：write_log
+[2025-05-23 14:21:24] 代理打卡成功！(ID: 808501428441166)
+[2025-05-23 14:21:24] 函式結束執行：write_log
+[2025-05-23 14:21:24] 函式結束執行：clockin_ss_test
+[2025-05-23 15:41:13] 開始呼叫函式：main
+[2025-05-23 15:41:13] [1] Scheduler 主控流程啟動
+[2025-05-23 15:41:13] [1] 開始執行 scheduler_main
+[2025-05-23 15:41:13] 開始呼叫函式：is_today_holiday
+[2025-05-23 15:41:13] 開始檢查日期：20250523 / 2025-05-23
+[2025-05-23 15:41:13] 成功讀取 holidays_2025.json，共 365 筆資料
+[2025-05-23 15:41:13] 成功讀取 manual_skip_days.json，共 1 筆資料
+[2025-05-23 15:41:13] 今天是工作日，繼續執行
+[2025-05-23 15:41:13] 函式結束執行：is_today_holiday
+[2025-05-23 15:41:13] [3] 準備啟動 VPN（ss-local）
+[2025-05-23 15:41:16] [5] VPN 啟動成功，準備執行打卡流程（含重試機制）
+[2025-05-23 15:41:16] 開始呼叫函式：random_delay
+[2025-05-23 15:41:16] 開始呼叫函式：get_random_delay
+[2025-05-23 15:41:16] 函式結束執行：get_random_delay
+[2025-05-23 15:41:16] 隨機延遲 341 秒後開始打卡...
+[2025-05-23 15:46:57] 函式結束執行：random_delay
+[2025-05-23 15:46:57] 開始呼叫函式：clockin_104
+[2025-05-23 15:46:57] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 15:46:58] 回傳狀態：200
+[2025-05-23 15:46:58] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 600145846185977}}
+[2025-05-23 15:46:58] 打卡成功！(ID: 600145846185977)
+[2025-05-23 15:46:58] 開始呼叫函式：send_telegram_message
+[2025-05-23 15:46:59] 成功發送 Telegram 訊息
+[2025-05-23 15:47:00] 函式結束執行：send_telegram_message
+[2025-05-23 15:47:00] 開始呼叫函式：write_log
+[2025-05-23 15:47:00] 打卡成功！(ID: 600145846185977)
+[2025-05-23 15:47:00] 函式結束執行：write_log
+[2025-05-23 15:47:00] 函式結束執行：clockin_104
+[2025-05-23 15:47:00] [6] 打卡成功（第 1 次）
+[2025-05-23 15:47:00] 開始呼叫函式：send_telegram_message
+[2025-05-23 15:47:01] 成功發送 Telegram 訊息
+[2025-05-23 15:47:01] 函式結束執行：send_telegram_message
+[2025-05-23 15:47:01] 開始呼叫函式：copy_latest_log
+[2025-05-23 15:47:01] 函式結束執行：copy_latest_log
+[2025-05-23 15:47:01] 函式結束執行：main
+[2025-05-23 15:48:27] 開始呼叫函式：main
+[2025-05-23 15:48:27] [1] Scheduler 主控流程啟動
+[2025-05-23 15:48:27] [1] 開始執行 scheduler_main
+[2025-05-23 15:48:27] 開始呼叫函式：is_today_holiday
+[2025-05-23 15:48:27] 開始檢查日期：20250523 / 2025-05-23
+[2025-05-23 15:48:27] 成功讀取 holidays_2025.json，共 365 筆資料
+[2025-05-23 15:48:27] 成功讀取 manual_skip_days.json，共 1 筆資料
+[2025-05-23 15:48:27] 今天是工作日，繼續執行
+[2025-05-23 15:48:27] 函式結束執行：is_today_holiday
+[2025-05-23 15:48:27] [3] 準備啟動 VPN（ss-local）
+[2025-05-23 15:48:30] [5] VPN 啟動成功，準備執行打卡流程（含重試機制）
+[2025-05-23 15:48:30] 開始呼叫函式：clockin_104
+[2025-05-23 15:48:30] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 15:48:31] 回傳狀態：200
+[2025-05-23 15:48:31] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 707135072705666}}
+[2025-05-23 15:48:31] 打卡成功！(ID: 707135072705666)
+[2025-05-23 15:48:31] 開始呼叫函式：send_telegram_message
+[2025-05-23 15:48:32] 成功發送 Telegram 訊息
+[2025-05-23 15:48:32] 函式結束執行：send_telegram_message
+[2025-05-23 15:48:32] 開始呼叫函式：write_log
+[2025-05-23 15:48:32] 打卡成功！(ID: 707135072705666)
+[2025-05-23 15:48:32] 函式結束執行：write_log
+[2025-05-23 15:48:32] 函式結束執行：clockin_104
+[2025-05-23 15:48:32] [6] 打卡成功（第 1 次）
+[2025-05-23 15:48:32] 開始呼叫函式：send_telegram_message
+[2025-05-23 15:48:33] 成功發送 Telegram 訊息
+[2025-05-23 15:48:33] 函式結束執行：send_telegram_message
+[2025-05-23 15:48:33] 開始呼叫函式：copy_latest_log
+[2025-05-23 15:48:33] 函式結束執行：copy_latest_log
+[2025-05-23 15:48:33] 函式結束執行：main
+[2025-05-23 15:51:14] 開始呼叫函式：main
+[2025-05-23 15:51:14] [1] Scheduler 主控流程啟動
+[2025-05-23 15:51:14] [1] 開始執行 scheduler_main
+[2025-05-23 15:51:14] 開始呼叫函式：is_today_holiday
+[2025-05-23 15:51:14] 開始檢查日期：20250523 / 2025-05-23
+[2025-05-23 15:51:14] 成功讀取 holidays_2025.json，共 365 筆資料
+[2025-05-23 15:51:14] 成功讀取 manual_skip_days.json，共 1 筆資料
+[2025-05-23 15:51:14] 今天是工作日，繼續執行
+[2025-05-23 15:51:14] 函式結束執行：is_today_holiday
+[2025-05-23 15:51:14] [3] 準備啟動 VPN（ss-local）
+[2025-05-23 15:51:17] [5] VPN 啟動成功，準備執行打卡流程（含重試機制）
+[2025-05-23 15:51:17] 開始呼叫函式：send_telegram_message
+[2025-05-23 15:51:18] 成功發送 Telegram 訊息
+[2025-05-23 15:51:18] 函式結束執行：send_telegram_message
+[2025-05-23 15:51:18] 開始呼叫函式：clockin_104
+[2025-05-23 15:51:18] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 15:51:18] 回傳狀態：200
+[2025-05-23 15:51:18] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 230242101340565}}
+[2025-05-23 15:51:18] 打卡成功！(ID: 230242101340565)
+[2025-05-23 15:51:18] 開始呼叫函式：send_telegram_message
+[2025-05-23 15:51:20] 成功發送 Telegram 訊息
+[2025-05-23 15:51:20] 函式結束執行：send_telegram_message
+[2025-05-23 15:51:20] 開始呼叫函式：write_log
+[2025-05-23 15:51:20] 打卡成功！(ID: 230242101340565)
+[2025-05-23 15:51:20] 函式結束執行：write_log
+[2025-05-23 15:51:20] 函式結束執行：clockin_104
+[2025-05-23 15:51:20] [6] 打卡成功（第 1 次）
+[2025-05-23 15:51:20] 開始呼叫函式：send_telegram_message
+[2025-05-23 15:51:21] 成功發送 Telegram 訊息
+[2025-05-23 15:51:21] 函式結束執行：send_telegram_message
+[2025-05-23 15:51:21] 開始呼叫函式：copy_latest_log
+[2025-05-23 15:51:21] 函式結束執行：copy_latest_log
+[2025-05-23 15:51:21] 函式結束執行：main
+[2025-05-23 16:00:14] 開始呼叫函式：main
+[2025-05-23 16:00:14] [1] Scheduler 主控流程啟動
+[2025-05-23 16:00:14] [1] 開始執行 scheduler_main
+[2025-05-23 16:00:14] 開始呼叫函式：is_today_holiday
+[2025-05-23 16:00:14] 開始檢查日期：20250523 / 2025-05-23
+[2025-05-23 16:00:14] 成功讀取 holidays_2025.json，共 365 筆資料
+[2025-05-23 16:00:14] 成功讀取 manual_skip_days.json，共 1 筆資料
+[2025-05-23 16:00:14] 今天是工作日，繼續執行
+[2025-05-23 16:00:14] 函式結束執行：is_today_holiday
+[2025-05-23 16:00:14] [3] 準備啟動 VPN（ss-local）
+[2025-05-23 16:00:17] [5] VPN 啟動成功，準備執行打卡流程（含重試機制）
+[2025-05-23 16:00:18] 開始呼叫函式：clockin_104
+[2025-05-23 16:00:18] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 16:00:19] 回傳狀態：200
+[2025-05-23 16:00:19] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 277186564855446}}
+[2025-05-23 16:00:19] 打卡成功！(ID: 277186564855446)
+[2025-05-23 16:00:20] 開始呼叫函式：write_log
+[2025-05-23 16:00:20] 打卡成功！(ID: 277186564855446)
+[2025-05-23 16:00:20] 函式結束執行：write_log
+[2025-05-23 16:00:20] 函式結束執行：clockin_104
+[2025-05-23 16:00:20] [6] 打卡成功（第 1 次）
+[2025-05-23 16:00:21] 開始呼叫函式：copy_latest_log
+[2025-05-23 16:00:21] 函式結束執行：copy_latest_log
+[2025-05-23 16:00:21] 函式結束執行：main
+[2025-05-23 17:03:10] 開始呼叫函式：main
+[2025-05-23 17:03:10] [1] 開始執行 scheduler_main
+[2025-05-23 17:03:10] 開始呼叫函式：is_today_holiday
+[2025-05-23 17:03:10] 開始檢查日期：20250523 / 2025-05-23
+[2025-05-23 17:03:10] 成功讀取 holidays_2025.json，共 365 筆資料
+[2025-05-23 17:03:10] 成功讀取 manual_skip_days.json，共 1 筆資料
+[2025-05-23 17:03:10] 今天是工作日，繼續執行
+[2025-05-23 17:03:10] 函式結束執行：is_today_holiday
+[2025-05-23 17:03:10] [3] 準備啟動 VPN（ss-local）
+[2025-05-23 17:03:13] [5] VPN 啟動成功，準備執行打卡流程（含重試機制）
+[2025-05-23 17:03:14] [5-R1] 執行打卡流程（第 1 次嘗試）
+[2025-05-23 17:03:14] 開始呼叫函式：clockin_104
+[2025-05-23 17:03:14] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-23 17:03:15] 回傳狀態：200
+[2025-05-23 17:03:15] 回傳內容：{"code": 200, "message": "OK", "data": {"isTemperatureOpen": false, "isEnable": false, "isRequiredReason": false, "overAttCardDataId": 490137315294129}}
+[2025-05-23 17:03:15] 打卡成功！(ID: 490137315294129)
+[2025-05-23 17:03:16] 開始呼叫函式：write_log
+[2025-05-23 17:03:16] 函式結束執行：write_log
+[2025-05-23 17:03:16] 函式結束執行：clockin_104
+[2025-05-23 17:03:16] [6] 打卡成功（第 1 次）
+[2025-05-23 17:03:20] 函式結束執行：main
