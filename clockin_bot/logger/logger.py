@@ -1,17 +1,18 @@
 import logging
 from pathlib import Path
 from datetime import datetime
+import inspect
 
-# 設定 Log 檔案資料夾為 logs
-BASE_DIR = Path(__file__).resolve().parent.parent.parent  # ✅ 導回到專案根目錄
-LOG_DIR = BASE_DIR / "logs"
-LOG_DIR.mkdir(exist_ok=True)
-
-# 每天產生一個 log 檔案
-today_str = datetime.now().strftime("%Y-%m-%d")
-LOG_FILE = LOG_DIR / f"clockin_{today_str}.log"
 
 def get_logger(name: str = "clockin"):
+    BASE_DIR = Path(__file__).resolve().parent.parent.parent
+    LOG_DIR = BASE_DIR / "logs"
+    LOG_DIR.mkdir(exist_ok=True)
+
+    caller = inspect.stack()[1]
+    print(f"[🪓 DEBUG] logger called from {caller.filename}:{caller.lineno}, writing to LOG_DIR = {LOG_DIR}")
+
+    today_str = datetime.now().strftime("%Y-%m-%d")
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
 
@@ -23,7 +24,6 @@ def get_logger(name: str = "clockin"):
         logger.addHandler(ch)
 
         # 每日 log：追加寫入
-        today_str = datetime.now().strftime("%Y-%m-%d")
         daily_log_file = LOG_DIR / f"clockin_{today_str}.log"
         fh_daily = logging.FileHandler(daily_log_file, mode="a", encoding="utf-8")
         fh_daily.setLevel(logging.DEBUG)
@@ -38,6 +38,3 @@ def get_logger(name: str = "clockin"):
         logger.addHandler(fh_latest)
 
     return logger
-
-
-
