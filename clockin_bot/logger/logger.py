@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime
 
 # 設定 Log 檔案資料夾為 logs
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent  # ✅ 導回到專案根目錄
 LOG_DIR = BASE_DIR / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 

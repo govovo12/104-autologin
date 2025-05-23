@@ -1,0 +1,84 @@
+[2025-05-22 15:01:32] 開始呼叫函式：clockin_104
+[2025-05-22 15:01:32] 開始執行104打卡流程...
+[2025-05-22 15:01:35] 打卡流程發生錯誤：'PlaywrightContextManager' object has no attribute '_playwright'
+[2025-05-22 15:01:35] 開始呼叫函式：send_telegram_message
+[2025-05-22 15:01:36] 成功發送 Telegram 訊息
+[2025-05-22 15:01:36] 函式結束執行：send_telegram_message
+[2025-05-22 15:01:36] 開始呼叫函式：write_log
+[2025-05-22 15:01:36] 打卡流程發生錯誤：'PlaywrightContextManager' object has no attribute '_playwright'
+[2025-05-22 15:01:36] 函式結束執行：write_log
+[2025-05-22 15:01:36] 函式結束執行：clockin_104
+[2025-05-22 15:04:02] 開始呼叫函式：clockin_104
+[2025-05-22 15:04:02] 開始執行104打卡流程...
+[2025-05-22 15:04:07] 打卡頁面導向中...
+[2025-05-22 15:04:11] 打卡流程發生錯誤：Page.goto: net::ERR_PROXY_CONNECTION_FAILED at https://pro.104.com.tw/psc2?m=b,m,b,b
+Call log:
+  - navigating to "https://pro.104.com.tw/psc2?m=b,m,b,b", waiting until "load"
+
+[2025-05-22 15:04:11] 開始呼叫函式：send_telegram_message
+[2025-05-22 15:04:12] 成功發送 Telegram 訊息
+[2025-05-22 15:04:12] 函式結束執行：send_telegram_message
+[2025-05-22 15:04:12] 開始呼叫函式：write_log
+[2025-05-22 15:04:12] 打卡流程發生錯誤：Page.goto: net::ERR_PROXY_CONNECTION_FAILED at https://pro.104.com.tw/psc2?m=b,m,b,b
+Call log:
+  - navigating to "https://pro.104.com.tw/psc2?m=b,m,b,b", waiting until "load"
+
+[2025-05-22 15:04:12] 函式結束執行：write_log
+[2025-05-22 15:04:12] 函式結束執行：clockin_104
+[2025-05-22 15:06:00] 開始呼叫函式：clockin_104
+[2025-05-22 15:06:00] 開始執行104打卡流程...
+[2025-05-22 15:06:01] 打卡頁面導向中...
+[2025-05-22 15:06:01] 打卡流程發生錯誤：Page.goto: net::ERR_NO_SUPPORTED_PROXIES at https://pro.104.com.tw/psc2?m=b,m,b,b
+Call log:
+  - navigating to "https://pro.104.com.tw/psc2?m=b,m,b,b", waiting until "load"
+
+[2025-05-22 15:06:01] 開始呼叫函式：send_telegram_message
+[2025-05-22 15:06:02] 成功發送 Telegram 訊息
+[2025-05-22 15:06:02] 函式結束執行：send_telegram_message
+[2025-05-22 15:06:02] 開始呼叫函式：write_log
+[2025-05-22 15:06:02] 打卡流程發生錯誤：Page.goto: net::ERR_NO_SUPPORTED_PROXIES at https://pro.104.com.tw/psc2?m=b,m,b,b
+Call log:
+  - navigating to "https://pro.104.com.tw/psc2?m=b,m,b,b", waiting until "load"
+
+[2025-05-22 15:06:02] 函式結束執行：write_log
+[2025-05-22 15:06:02] 函式結束執行：clockin_104
+[2025-05-22 15:34:35] 開始呼叫函式：clockin_104
+[2025-05-22 15:34:35] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-22 15:34:35] 打卡流程發生例外錯誤：Missing dependencies for SOCKS support.
+[2025-05-22 15:34:35] 開始呼叫函式：send_telegram_message
+[2025-05-22 15:34:36] 發送 Telegram 訊息失敗: 404 Client Error: Not Found for url: https://api.telegram.org/botNone/sendMessage
+[2025-05-22 15:34:36] 函式結束執行：send_telegram_message
+[2025-05-22 15:34:36] 開始呼叫函式：write_log
+[2025-05-22 15:34:36] 打卡流程發生例外錯誤：Missing dependencies for SOCKS support.
+[2025-05-22 15:34:36] 函式結束執行：write_log
+[2025-05-22 15:34:36] 函式結束執行：clockin_104
+[2025-05-22 15:37:34] 開始呼叫函式：clockin_104
+[2025-05-22 15:37:34] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-22 15:37:36] 打卡流程發生例外錯誤：SOCKSHTTPSConnectionPool(host='pro.104.com.tw', port=443): Max retries exceeded with url: /psc2/api/f0400/newClockin (Caused by NewConnectionError('<urllib3.contrib.socks.SOCKSHTTPSConnection object at 0x000001E504B27620>: Failed to establish a new connection: [WinError 10061] 無法連線，因為目標電腦拒絕連線。'))
+[2025-05-22 15:37:36] 開始呼叫函式：send_telegram_message
+[2025-05-22 15:37:37] 發送 Telegram 訊息失敗: 404 Client Error: Not Found for url: https://api.telegram.org/botNone/sendMessage
+[2025-05-22 15:37:37] 函式結束執行：send_telegram_message
+[2025-05-22 15:37:37] 開始呼叫函式：write_log
+[2025-05-22 15:37:37] 打卡流程發生例外錯誤：SOCKSHTTPSConnectionPool(host='pro.104.com.tw', port=443): Max retries exceeded with url: /psc2/api/f0400/newClockin (Caused by NewConnectionError('<urllib3.contrib.socks.SOCKSHTTPSConnection object at 0x000001E504B27620>: Failed to establish a new connection: [WinError 10061] 無法連線，因為目標電腦拒絕連線。'))
+[2025-05-22 15:37:37] 函式結束執行：write_log
+[2025-05-22 15:37:37] 函式結束執行：clockin_104
+[2025-05-22 15:39:27] 開始呼叫函式：clockin_104
+[2025-05-22 15:39:27] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-22 15:39:28] 打卡流程發生例外錯誤：('Connection aborted.', ConnectionResetError(10054, '遠端主機已強制關閉一個現存的連線。', None, 10054, None))
+[2025-05-22 15:39:28] 開始呼叫函式：send_telegram_message
+[2025-05-22 15:39:29] 發送 Telegram 訊息失敗: 404 Client Error: Not Found for url: https://api.telegram.org/botNone/sendMessage
+[2025-05-22 15:39:29] 函式結束執行：send_telegram_message
+[2025-05-22 15:39:29] 開始呼叫函式：write_log
+[2025-05-22 15:39:29] 打卡流程發生例外錯誤：('Connection aborted.', ConnectionResetError(10054, '遠端主機已強制關閉一個現存的連線。', None, 10054, None))
+[2025-05-22 15:39:29] 函式結束執行：write_log
+[2025-05-22 15:39:29] 函式結束執行：clockin_104
+[2025-05-22 15:48:02] 開始呼叫函式：clockin_104
+[2025-05-22 15:48:02] 開始執行 104 打卡流程（requests 版本）...
+[2025-05-22 15:48:04] 打卡流程發生例外錯誤：SOCKSHTTPSConnectionPool(host='pro.104.com.tw', port=443): Max retries exceeded with url: /psc2/api/f0400/newClockin (Caused by NewConnectionError('<urllib3.contrib.socks.SOCKSHTTPSConnection object at 0x0000014B17427620>: Failed to establish a new connection: [WinError 10061] 無法連線，因為目標電腦拒絕連線。'))
+[2025-05-22 15:48:04] 開始呼叫函式：send_telegram_message
+[2025-05-22 15:48:05] 發送 Telegram 訊息失敗: 404 Client Error: Not Found for url: https://api.telegram.org/botNone/sendMessage
+[2025-05-22 15:48:05] 函式結束執行：send_telegram_message
+[2025-05-22 15:48:05] 開始呼叫函式：write_log
+[2025-05-22 15:48:05] 打卡流程發生例外錯誤：SOCKSHTTPSConnectionPool(host='pro.104.com.tw', port=443): Max retries exceeded with url: /psc2/api/f0400/newClockin (Caused by NewConnectionError('<urllib3.contrib.socks.SOCKSHTTPSConnection object at 0x0000014B17427620>: Failed to establish a new connection: [WinError 10061] 無法連線，因為目標電腦拒絕連線。'))
+[2025-05-22 15:48:05] 函式結束執行：write_log
+[2025-05-22 15:48:05] 函式結束執行：clockin_104
