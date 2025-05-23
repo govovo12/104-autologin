@@ -1,85 +1,92 @@
-✅ 新版 README.md（v2.0 架構）
-markdown
+# 104 打卡自動化系統（Clockin-Bot）
 
-# Clockin-Bot 自動打卡系統 v2.0
-
-本專案實現「跨平台、自動化、無 GUI 依賴」的 104 打卡流程，並整合 VPN 控制、API 驗證、Log 記錄、Telegram 通知與雲端部署能力。
+🎯 **目的**：自動連接 VPN、登入 104、打卡、上傳紀錄報告、並透過 Telegram 傳送打卡狀態通知。
 
 ---
 
-## ✅ 功能簡介
+## 📁 專案結構
 
-- 📡 自動透過 SOCKS5 VPN 連線（支援 Outline 金鑰轉換）
-- ✅ 透過 API 判斷打卡成功與否（不再依賴畫面比對）
-- 📅 自動判斷國定假日與自訂排除日，自動跳過
-- 🔁 打卡失敗自動重試三次，並推送 Telegram 通知
-- 📄 打卡 log 自動儲存、可上傳至 GitHub Pages 檢視
-- 💬 支援每日打卡摘要推送至 Telegram
+```
+104-autologin/
+├── clockin_bot/                  # 主程式模組
+│   ├── clockin/                 # 打卡邏輯
+│   ├── config/                  # 設定檔載入與環境變數
+│   ├── data/                    # cookie、假日表等資料檔
+│   ├── logger/                  # 統一 log 寫入模組
+│   ├── logs/                    # ❌ 已移除（log 已集中於根目錄 logs/）
+│   ├── modules/                # 流程控制模組（如主腳本）
+│   ├── notify/                 # Telegram 通知模組
+│   ├── scripts/                # bat 腳本（啟動任務用）
+│   ├── session/                # cookie 儲存與檢查
+│   ├── test/                   # 測試用模組
+│   ├── tools/                  # 工具函式、排程、報告轉換等
+│   └── vpn/                    # VPN 啟動與設定模組
+├── docs/                       # HTML 報告發佈（供 GitHub Pages 使用）
+├── logs/                       # ✅ 所有打卡與執行 log 寫入於此
+├── run_clockin.py             # 任務入口點（指定 --task 啟動模組）
+├── .env                       # 本地環境變數（含 TG Token 等）
+├── requirements.txt           # 依賴套件列表
+└── README.md                  # 專案說明文件
+```
 
 ---
 
-## ⚙️ 安裝與執行步驟（本地端）
+## 🚀 核心功能
 
-### 1. 建立虛擬環境與安裝套件
+- ✅ 支援打卡前自動啟動 VPN（Outline 或 Shadowsocks）
+- ✅ 執行前自動判斷是否為假日或排除日
+- ✅ 可重試最多 3 次打卡流程（避免網路或驗證延遲）
+- ✅ 將打卡狀態與錯誤訊息傳送到 Telegram
+- ✅ 自動產出 log 與 HTML 報告並推送至 GitHub Pages
+
+---
+
+## 🧱 架構特色
+
+- 所有模組皆整合 `__task_info__`，統一管理與可由 `run_clockin.py` 執行
+- logger 模組提供裝飾器與集中 log 檔輸出
+- 所有打卡、VPN、cookie 等功能模組皆模組化、可獨立測試
+- 路徑採用旗標式寫法，確保跨系統一致性與可部署性
+
+---
+
+## 📦 安裝方式
 
 ```bash
+cd 104-autologin
 python -m venv venv
-venv\Scripts\activate         # Windows
-# source venv/bin/activate    # Linux/macOS
+venv\Scripts\activate
 pip install -r requirements.txt
-2. 安裝 Playwright 瀏覽器（首次執行）
+```
 
-playwright install
-3. 建立 .env 檔案設定 Telegram 參數
-env
+---
 
-TELEGRAM_BOT_TOKEN=xxx
-TELEGRAM_CHAT_ID=xxx
-你也可以參考 .env.example 範本。
+## 🕹 執行方式
 
-🕹 使用方式
-🔐 儲存 Cookie（只需做一次）
+### 主控打卡流程（含假日判斷 + VPN + 打卡 + 上傳報告）
+```bash
+python run_clockin.py --task scheduler_main
+```
 
-python run_login_save_cookie.py
-會自動打開瀏覽器，登入 104 並儲存 login_state.json
+### 檢查 cookie 有效期限
+```bash
+python run_clockin.py --task check_cookie_expiry
+```
 
-⏰ 執行打卡流程
+### 查看資料夾結構
+```bash
+python run_clockin.py --task print_clean_structure
+```
 
-python run_clockin.py
-支援自動判斷是否為假日、自動連線 VPN、自動登入與打卡、失敗自動重試與通知。
+---
 
-🧾 專案資料結構
+## 📝 備註
 
-clockin-bot/
-├── run_clockin.py                 # 主程式入口
-├── requirements.txt              # 套件清單
-├── .env.example                  # 環境變數範例
-├── clockin/                      # 打卡邏輯模組
-├── config/                       # 全域參數、登入路徑設定
-├── data/                         # 假日設定與 cookie 存檔
-├── logger/                       # 日誌紀錄與裝飾器
-├── logs/                         # log 檔輸出路徑
-├── modules/scheduler/            # 排程控制流程
-├── notify/                       # Telegram 推播模組
-├── session/                      # Cookie 儲存與檢查邏輯
-├── tools/                        # 時間/延遲/假日工具模組
-├── vpn/                          # VPN 控制與 ss-local 配置
-└── .gitignore                    # 忽略項目
-📌 注意事項
-登入流程需先手動完成一次登入並儲存 cookie（可用 30～90 天）
+- log 已統一集中於根目錄 logs/，不再有 clockin_bot/logs/
+- 所有報告皆會轉成 HTML 存至 docs/ 目錄並推送至 GitHub Pages
+- 預設已關閉 GitHub Actions 自動執行，僅本地排程或手動執行
 
-VPN 現已全面改為使用 ss-local 並支援 Outline 金鑰轉換為 config
+---
 
-程式以 UTC+8（台北時間）為基準處理所有打卡與日誌記錄
-
-🚧 TODO（v2.1 目標）
-✅ log 自動上傳至 GitHub Pages
-
-✅ Telegram 附上 log 超連結
-
-⏳ 自動續期 login_state cookie
-
-⏳ VM 專用啟動腳本／GitHub Actions CI 整合
-
-🧑‍💻 聲明
-本專案僅供自動化學習用途，請勿用於非法或濫用場景。104 為第三方平台，其政策與架構若有更動，本專案將不保證正常運行。
+👨‍💻 製作：@govovo12
+📬 意見請透過 Telegram bot 傳送

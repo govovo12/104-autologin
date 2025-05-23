@@ -22,11 +22,7 @@ headers = {
 
 @log_call
 def write_log(message):
-    log_path = BASE_DIR / "logs" / f"clockin_{datetime.now().date()}.log"
-    log_path.parent.mkdir(exist_ok=True)
-    with open(log_path, "a", encoding="utf-8") as log_file:
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        log_file.write(f"[{timestamp}] {message}\n")
+    log.info(message)
 
 @log_call
 def clockin_104():
@@ -66,6 +62,11 @@ def clockin_104():
     send_telegram_message(f"❌ 104 打卡失敗：{err}")
     write_log(err)
     return False
+
+proxies = {
+    "http": "socks5h://127.0.0.1:1080",
+    "https": "socks5h://127.0.0.1:1080"
+}
 
 __task_info__ = {
     "name": "clockin_104",
