@@ -1,9 +1,30 @@
-# === Python 自動產生 ===
+# Python 編譯快取
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-.venv/
+
+# 虛擬環境
 venv/
 
+# VSCode、IDE 相關
+.vscode/
+.idea/
 
+# 測試報表
+htmlcov/
+coverage.xml
+
+# Log 與 pytest 執行紀錄
+logs/
+*.log
+
+# 本地 Cookie / 認證資訊
+data/login_state.json
+data/cookie_header.json
+
+# 本地 Shadowsocks 可執行檔
+vpn/sslocal/*.exe
+vpn/sslocal/*.dll
+vpn/sslocal/*.log
+
+# 環境變數檔案
+.env

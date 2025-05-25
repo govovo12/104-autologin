@@ -1,33 +1,44 @@
 from datetime import datetime
-import os
 import requests
-from clockin_bot.config.config import TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+from clockin_bot.config import config
+from clockin_bot.clockin.base.result import TaskResult, ResultCode
+from clockin_bot.logger.logger import get_logger
+from clockin_bot.logger.decorators import log_call
 
-# GitHub Pages 設定（若未來想改路徑，改這個變數即可）
-REPORT_URL = "https://govovo12.github.io/104-autologin/docs/latest_log_view.html"
+log = get_logger("telegram")
 
+# GitHub Pages 設定（未來若更動報告網址，改這裡即可）
+REPORT_URL = "https://govovo12.github.io/104-autologin/latest_log_view.html"
 
-def send_telegram_message(message: str):
-    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-        print("❌ 未設定 Telegram BOT TOKEN 或 CHAT ID，略過推播")
-        return
+@log_call
+def send_telegram_message(message: str) -> TaskResult:
+    # 使用 config 模組中的 TOKEN 與 CHAT_ID
+    if not config.TELEGRAM_BOT_TOKEN or not config.TELEGRAM_CHAT_ID:
+        msg = "未設定 Telegram BOT TOKEN 或 CHAT ID，略過推播"
+        log.warning(msg)
+        return TaskResult(code=ResultCode.NOTIFY_SKIP, message=msg)
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    full_message = (
-        f"{message}\n"
-        f"📅 {timestamp}\n"
-        f"🔗 報告網址：{REPORT_URL}"
-    )
+    full_message = f"{message}\n📅 {timestamp}\n🔗 報告網址：{REPORT_URL}"
 
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    url = f"https://api.telegram.org/bot{config.TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
+        "chat_id": config.TELEGRAM_CHAT_ID,
         "text": full_message
     }
 
     try:
         response = requests.post(url, json=payload, timeout=5)
         response.raise_for_status()
-        print("[INFO][telegram] 成功發送 Telegram 訊息")
+        log.info("成功發送 Telegram 訊息")
+        return TaskResult(code=ResultCode.SUCCESS, message="已推播 Telegram")
     except Exception as e:
-        print(f"[ERROR][telegram] 發送 Telegram 訊息失敗: {e}")
+        err = f"發送 Telegram 訊息失敗: {e}"
+        log.error(err)
+        return TaskResult(code=ResultCode.NOTIFY_FAILED, message=err)
+
+__task_info__ = {
+    "name": "send_telegram_message",
+    "desc": "透過 Telegram BOT 發送訊息通知，含報告網址與時間戳",
+    "entry": send_telegram_message
+}

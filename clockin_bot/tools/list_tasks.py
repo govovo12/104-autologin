@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 import importlib.util
 import traceback
-
+from clockin_bot.logger.safe_print import safe_print
 # 加入專案根目錄
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(BASE_DIR))
@@ -38,14 +38,14 @@ def find_tasks():
 
 def print_tasks(tasks):
     if not tasks:
-        print("❌ 沒有找到任何 __task_info__ 註冊的模組")
+        safe_print("❌ 沒有找到任何 __task_info__ 註冊的模組")
         return
 
-    print("✅ 已註冊任務清單：\n")
+    safe_print("✅ 已註冊任務清單：\n")
     for name, desc, entry, mod in tasks:
-        print(f"- {name.ljust(20)} → {desc}")
-        print(f"  🔹 module: {mod}")
-        print(f"  🔹 entry : {entry}\n")
+        safe_print(f"- {name.ljust(20)} → {desc}")
+        safe_print(f"  🔹 module: {mod}")
+        safe_print(f"  🔹 entry : {entry}\n")
 
 if __name__ == "__main__":
     print_tasks(find_tasks())

@@ -1,53 +1,60 @@
+import os
 import subprocess
 import time
 import socket
-import os
+from pathlib import Path
+from clockin_bot.logger.logger import get_logger
+from clockin_bot.logger.decorators import log_call
+from clockin_bot.clockin.base.result import TaskResult, ResultCode
 
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+log = get_logger("vpn")
 
-CONFIG_PATH = os.path.join(CURRENT_DIR, "ss_config.json")
-LOCAL_SOCKS_PORT = 1080
-SSLOCAL_PATH = os.path.abspath(
-    os.path.join(CURRENT_DIR, "sslocal", "sslocal.exe")
-)
+SSLOCAL_PATH = Path(__file__).resolve().parent / "sslocal" / "sslocal.exe"
+SS_CONFIG_PATH = Path(__file__).resolve().parent / "sslocal" / "ss_config.json"
 
+def is_port_open(host: str, port: int) -> bool:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.settimeout(2)
+        return sock.connect_ex((host, port)) == 0
 
-def start_vpn():
-    if is_vpn_connected():
-        print("[VPN] SOCKS5 proxy already running.")
-        return
+@log_call
+def start_vpn() -> TaskResult:
+    if is_port_open("127.0.0.1", 1080):
+        msg = "SOCKS5 proxy already running."
+        log.info(msg)
+        return TaskResult(code=ResultCode.SUCCESS, message=msg)
 
-    print("[VPN] Starting sslocal...")
-    print(f"[VPN] 執行檔路徑: {SSLOCAL_PATH}")
+    if not SSLOCAL_PATH.exists() or not SS_CONFIG_PATH.exists():
+        msg = "sslocal.exe 或 ss_config.json 不存在"
+        log.error(msg)
+        return TaskResult(code=ResultCode.VPN_FILE_MISSING, message=msg)
 
-    # 啟動 proxy，不阻塞主流程
-    subprocess.Popen(
-        [SSLOCAL_PATH, "-c", CONFIG_PATH, "-v"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
-
-    # 等待代理啟動
-    time.sleep(1)
-
-    if is_vpn_connected():
-        print("[VPN] ✅ SOCKS5 proxy started successfully.")
-    else:
-        print("[VPN] ❌ Failed to start sslocal.")
-        raise RuntimeError("VPN 啟動失敗")
-
-def is_vpn_connected(host="127.0.0.1", port=LOCAL_SOCKS_PORT):
     try:
-        with socket.create_connection((host, port), timeout=2):
-            return True
-    except Exception:
-        return False
+        subprocess.Popen(
+            [str(SSLOCAL_PATH), "-c", str(SS_CONFIG_PATH)],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            creationflags=subprocess.CREATE_NO_WINDOW
+        )
 
-if __name__ == "__main__":
-    start_vpn()
+        for i in range(10):
+            time.sleep(1)
+            if is_port_open("127.0.0.1", 1080):
+                msg = f"SOCKS5 proxy started successfully after {i + 1} sec."
+                log.info(msg)
+                return TaskResult(code=ResultCode.SUCCESS, message=msg)
+
+        msg = "VPN 啟動後 10 秒仍無法連線"
+        log.error(msg)
+        return TaskResult(code=ResultCode.VPN_START_TIMEOUT, message=msg)
+
+    except Exception as e:
+        msg = f"啟動 sslocal 發生例外：{e}"
+        log.error(msg)
+        return TaskResult(code=ResultCode.VPN_START_EXCEPTION, message=msg)
 
 __task_info__ = {
     "name": "connect_ss_local",
     "desc": "啟動 Shadowsocks 本地代理（sslocal.exe）並驗證是否連線成功",
-    "entry": start_vpn,
+    "entry": start_vpn
 }

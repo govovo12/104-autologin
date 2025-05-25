@@ -4,6 +4,7 @@ from pathlib import Path
 from clockin_bot.logger.logger import get_logger
 from clockin_bot.logger.decorators import log_call
 from clockin_bot.notify.telegram_notify import send_telegram_message
+from clockin_bot.clockin.base.result import TaskResult, ResultCode
 
 log = get_logger("cookie_checker")
 
@@ -16,15 +17,15 @@ def check_cookie_expiry():
         msg = f"找不到 cookie 檔案：{COOKIE_FILE}"
         log.error(msg)
         send_telegram_message(msg)
-        return False
+        return TaskResult(code=ResultCode.COOKIE_FILE_NOT_FOUND, message=msg)
 
     try:
         with open(COOKIE_FILE, "r", encoding="utf-8") as f:
             cookie_data = json.load(f)
-
             cookies = cookie_data.get("cookies", [])
+
             valid_candidates = [
-                c for c in cookies 
+                c for c in cookies
                 if isinstance(c.get("expires"), (int, float)) and c["expires"] > 0
             ]
 
@@ -32,9 +33,8 @@ def check_cookie_expiry():
                 msg = "找不到任何具有效期限的 cookie，無法判斷剩餘天數"
                 log.error(msg)
                 send_telegram_message(msg)
-                return False
+                return TaskResult(code=ResultCode.COOKIE_NO_VALID_EXPIRES, message=msg)
 
-            # 挑出過期時間最遠的那筆 cookie 作為參考
             best_cookie = max(valid_candidates, key=lambda c: c["expires"])
             cookie_name = best_cookie.get("name")
             expire_time = datetime.fromtimestamp(best_cookie["expires"])
@@ -48,7 +48,7 @@ def check_cookie_expiry():
                 msg = f"❌ {cookie_name} 已過期，請重新登入"
                 log.error(msg)
                 send_telegram_message(msg)
-                return False
+                return TaskResult(code=ResultCode.COOKIE_ALREADY_EXPIRED, message=msg)
             elif delta < timedelta(days=7):
                 msg = f"⚠ {cookie_name} 快過期（剩 {delta_days} 天），請儘速重新登入"
                 log.warning(msg)
@@ -58,17 +58,16 @@ def check_cookie_expiry():
                 log.info(msg)
                 send_telegram_message(msg)
 
-            return True
+            return TaskResult(code=ResultCode.SUCCESS, message=msg)
 
     except Exception as e:
         msg = f"檢查 cookie 時發生錯誤：{e}"
         log.error(msg)
         send_telegram_message(msg)
-        return False
+        return TaskResult(code=ResultCode.COOKIE_PARSE_ERROR, message=msg)
 
 __task_info__ = {
     "name": "check_cookie_expiry_v2",
     "desc": "分析 login_state.json 內最晚過期 cookie 的剩餘天數，並推播通知",
     "entry": check_cookie_expiry,
 }
-
