@@ -1,7 +1,7 @@
 import argparse
 import importlib
 from pathlib import Path
-
+from clockin_bot.logger.safe_print import safe_print
 def find_module_by_filename(base_dir: Path, target_filename: str):
     for py_file in base_dir.rglob("*.py"):
         if py_file.stem == target_filename:
@@ -19,7 +19,7 @@ def main():
     module_path = find_module_by_filename(base_dir, args.task)
 
     if not module_path:
-        print(f"❌ 找不到符合名稱的模組：{args.task}.py")
+        safe_print(f"❌ 找不到符合名稱的模組：{args.task}.py")
         return
 
     try:
@@ -30,17 +30,17 @@ def main():
             entry = task_meta.get("entry")
             desc = task_meta.get("desc", "")
             if callable(entry):
-                print(f"✅ 執行 {module_path} 任務：{desc}")
+                safe_print(f"✅ 執行 {module_path} 任務：{desc}")
                 entry()
                 return
             else:
-                print(f"⚠ 模組 {module_path} 的 __task_info__ 缺少有效 entry")
+                safe_print(f"⚠ 模組 {module_path} 的 __task_info__ 缺少有效 entry")
                 return
 
-        print(f"⚠ 模組 {module_path} 沒有定義 __task_info__，請補上以支援新架構")
+        safe_print(f"⚠ 模組 {module_path} 沒有定義 __task_info__，請補上以支援新架構")
 
     except Exception as e:
-        print(f"❌ 模組執行錯誤：{e}")
+        safe_print(f"❌ 模組執行錯誤：{e}")
 
 if __name__ == "__main__":
     main()

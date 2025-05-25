@@ -1,5 +1,5 @@
 @echo off
-cd %USERPROFILE%\Desktop\104-autologin
+cd /d "%~dp0\..\.."
 call venv\Scripts\activate
-python run_clockin.py --task scheduler_main
+python -m clockin_bot.modules.scheduler.scheduler_main
 pause
