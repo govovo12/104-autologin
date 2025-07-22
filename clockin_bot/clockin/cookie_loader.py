@@ -1,51 +1,26 @@
-from pathlib import Path
 import json
+from pathlib import Path
 from clockin_bot.clockin.base.result import TaskResult, ResultCode
-from clockin_bot.logger.logger import get_logger
-from clockin_bot.logger.decorators import log_call
 
-log = get_logger("cookie")
 
-@log_call
-def load_cookie_headers() -> TaskResult:
+def load_login_state() -> TaskResult:
+    """
+    單純讀取 login_state.json 的內容（格式可能是 cookie list 或 header）
+    不進行轉換，由上層模組依需求判斷格式後自行轉換。
+    """
     try:
-        # 這裡直接指定絕對路徑
-        cookie_path = Path(r"C:\Users\user\Desktop\104-autologin\clockin_bot\data\cookie_header.json")
+        file_path = Path("clockin_bot/data/login_state.json")
+        if not file_path.exists():
+            return TaskResult(ResultCode.COOKIE_NOT_FOUND, "找不到 login_state.json")
 
-        if not cookie_path.exists():
-            return TaskResult(
-                code=ResultCode.COOKIE_NOT_FOUND,
-                message="找不到 cookie_header.json 檔案"
-            )
+        with open(file_path, encoding="utf-8") as f:
+            data = json.load(f)
 
-        with open(cookie_path, encoding="utf-8") as f:
-            cookie_str = json.load(f).get("cookie")
-            if not cookie_str:
-                return TaskResult(
-                    code=ResultCode.COOKIE_EMPTY,
-                    message="cookie 欄位為空或不存在"
-                )
+        # 僅驗證資料型別是我們能接受的格式（list 或 dict）
+        if not isinstance(data, (list, dict)):
+            return TaskResult(ResultCode.COOKIE_EMPTY, "login_state.json 格式錯誤（應為 list 或 dict）")
 
-        headers = {
-            "Content-Type": "application/json",
-            "User-Agent": "Mozilla/5.0",
-            "cookie": cookie_str
-        }
-
-        return TaskResult(
-            code=ResultCode.SUCCESS,
-            message="成功載入 cookie headers",
-            data=headers
-        )
+        return TaskResult(ResultCode.SUCCESS, "已成功載入 login_state", data)
 
     except Exception as e:
-        return TaskResult(
-            code=ResultCode.COOKIE_LOAD_EXCEPTION,
-            message=f"載入 cookie 發生例外：{e}"
-        )
-
-__task_info__ = {
-    "name": "load_cookie_headers",
-    "desc": "讀取 cookie_header.json 並回傳標準 headers 結構",
-    "entry": load_cookie_headers,
-}
+        return TaskResult(ResultCode.COOKIE_LOAD_EXCEPTION, f"載入 login_state 發生例外：{e}")

@@ -26,5 +26,3 @@ vpn/sslocal/*.exe
 vpn/sslocal/*.dll
 vpn/sslocal/*.log
 
-# 環境變數檔案
-.env

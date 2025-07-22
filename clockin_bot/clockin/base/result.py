@@ -44,7 +44,8 @@ class ResultCode(Enum):
     VPN_FILE_MISSING = 7001         # sslocal 或 config 檔案不存在
     VPN_START_TIMEOUT = 7002        # 嘗試啟動 10 秒失敗
     VPN_START_EXCEPTION = 7003      # Popen 發生錯誤
-
+    VPN_STOP_FAILED = 7004          # 無法正常關閉 sslocal
+    VPN_NOT_RUNNING = 7005          # 嘗試關閉時找不到 process
 
 
 @dataclass

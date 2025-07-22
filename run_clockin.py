@@ -17,7 +17,8 @@ def main():
 
     base_dir = Path(__file__).resolve().parent / "clockin_bot"
     module_path = find_module_by_filename(base_dir, args.task)
-
+    print(f"[DEBUG] 找到模組路徑：{module_path}")
+    
     if not module_path:
         safe_print(f"❌ 找不到符合名稱的模組：{args.task}.py")
         return

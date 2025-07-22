@@ -1,51 +1,87 @@
-import subprocess
 from datetime import datetime
+from subprocess import run, CalledProcessError, PIPE
 from pathlib import Path
-from clockin_bot.clockin.base.result import TaskResult, ResultCode
+
 from clockin_bot.logger.logger import get_logger
 from clockin_bot.logger.decorators import log_call
+from clockin_bot.notify.telegram_notify import send_telegram_message
 
-log = get_logger("uploader")
+log = get_logger("upload_log")
+
+base_dir = Path(__file__).resolve().parent.parent.parent
+latest_log_path = base_dir / "logs" / "latest_run.log"
+html_path = base_dir / "docs" / "latest_log_view.html"
+
+HTML_TEMPLATE = """<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>Log Viewer</title>
+    <style>
+        body {{ font-family: monospace; background: #f7f7f7; padding: 2rem; }}
+        pre {{ background: #fff; padding: 1rem; border-radius: 6px; box-shadow: 0 0 8px rgba(0,0,0,0.1); }}
+    </style>
+</head>
+<body>
+    <h2>🧾 Latest Log - Generated {}</h2>
+    <pre>{}</pre>
+</body>
+</html>
+"""
 
 @log_call
-def upload_log_only() -> TaskResult:
-    base_dir = Path(__file__).resolve().parent.parent.parent
-    html_path = base_dir / "docs" / "latest_log_view.html"
+def upload_log_only():
+    if not latest_log_path.exists():
+        raise FileNotFoundError(f"❌ 找不到 log 檔：{latest_log_path}")
 
-    # 若報告檔不存在，回傳 FILE_NOT_FOUND 錯誤碼
-    if not html_path.exists():
-        msg = "找不到報告檔 docs/latest_log_view.html"
-        log.warning(msg)
-        return TaskResult(code=ResultCode.FILE_NOT_FOUND, message=msg)
+    html_path.parent.mkdir(parents=True, exist_ok=True)
 
+    # 嘗試讀取 log（多編碼 fallback）
     try:
-        # 加入 staged 區域
-        subprocess.run(["git", "add", str(html_path)], check=True)
+        print("[DEBUG] 嘗試以 UTF-8 讀取 log")
+        log_text = latest_log_path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        try:
+            print("[DEBUG] UTF-8 失敗，嘗試以 CP950")
+            log_text = latest_log_path.read_text(encoding="cp950")
+        except UnicodeDecodeError:
+            print("[DEBUG] CP950 也失敗，改用 UTF-8 + errors=replace")
+            log_text = latest_log_path.read_text(encoding="utf-8", errors="replace")
 
-        # 檢查是否有變更加入 staged 區域，若沒有就跳過
-        result = subprocess.run(["git", "diff", "--cached", "--quiet"])
-        if result.returncode == 0:
-            msg = "沒有任何變更加入暫存區，跳過 commit。"
-            log.info(msg)
-            return TaskResult(code=ResultCode.NO_CHANGE_TO_COMMIT, message=msg)
+    # 產出 HTML
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    html_content = HTML_TEMPLATE.format(timestamp, log_text)
+    html_path.write_text(html_content, encoding="utf-8")
+    print(f"[DEBUG] ✅ HTML 已寫入：{html_path}")
 
-        # 有變更 → commit + push
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        subprocess.run(["git", "commit", "-m", f"📄 更新報告 {timestamp}"], check=True)
-        subprocess.run(["git", "push"], check=True)
+    # Git 操作
+    commit_msg = f"📄 更新報告 {timestamp}"
+    try:
+        run(["git", "add", str(html_path)], check=True)
 
-        msg = "已推送報告至 GitHub Pages"
-        log.info(msg)
-        return TaskResult(code=ResultCode.SUCCESS, message=msg)
+        commit_result = run(
+            ["git", "commit", "-m", commit_msg],
+            stdout=PIPE, stderr=PIPE,
+            text=True, encoding="utf-8", errors="replace"
+        )
 
-    except subprocess.CalledProcessError as e:
-        # Git 指令出錯
-        msg = f"Git 操作失敗：{e}"
-        log.error(msg)
-        return TaskResult(code=ResultCode.GIT_ERROR, message=msg)
+        output = (commit_result.stdout or "") + (commit_result.stderr or "")
+        if "nothing to commit" in output.lower():
+            print("⚠️ 沒有任何變更，略過推送")
+        else:
+            run(["git", "push"], check=True)
+            print("✅ GitHub Pages 已推送")
+
+            url = "https://govovo12.github.io/104-autologin/latest_log_view.html"
+            send_telegram_message(f"📤 GitHub Pages 報告已更新\n🔗 {url}")
+
+    except CalledProcessError as e:
+        print(f"❌ Git 操作失敗：{e}")
+        send_telegram_message("❌ GitHub Pages log 推送失敗，請手動確認錯誤")
+
 
 __task_info__ = {
     "name": "upload_log_only",
-    "desc": "將報告檔（HTML）推送至 GitHub Pages（如果有變更）",
-    "entry": upload_log_only
+    "desc": "將 latest_run.log 轉成 HTML 並推送至 GitHub Pages",
+    "entry": upload_log_only,
 }
