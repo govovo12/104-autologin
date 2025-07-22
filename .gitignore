@@ -26,3 +26,5 @@ vpn/sslocal/*.exe
 vpn/sslocal/*.dll
 vpn/sslocal/*.log
 
+"token.json" 
+"credentials.json" 
