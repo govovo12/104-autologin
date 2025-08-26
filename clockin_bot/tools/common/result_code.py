@@ -26,6 +26,21 @@ class ResultCode:
     # step_12_save_login_state.py
     TASK_SAVE_LOGIN_STATE_FAILED = 10013  # 儲存 login_state 檔案失敗
 
+    # clockin_bot/vpn 子控任務（10020 ~ 10029）
+    TASK_VPN_ENV_MISSING_KEY = 10020      # 缺少必要 VPN 環境變數
+    TASK_VPN_CONFIG_FILE_NOT_FOUND = 10021  # VPN 設定檔不存在
+    TASK_VPN_CONFIG_INVALID_FORMAT = 10022  # VPN 設定檔格式錯誤（缺少 exe_path / params）
+    TASK_VPN_PROCESS_NOT_FOUND = 10023    # 未偵測到 tun2socks 進程
+    TASK_VPN_TUN_GW_MISSING = 10024       # 無法從參數找到 -tunGw
+    TASK_VPN_ROUTE_ADD_FAILED = 10025     # 設定路由失敗
+    TASK_VPN_STOP_FAILED = 10026          # 關閉 tun2socks 失敗
+    # clockin_bot/vpn 子控任務（10020 ~ 10029）
+    TASK_VPN_INVALID_ACTION = 10027  # VPN 控制器 action 無效
+
+    # clockin_bot/modules/scheduler 子控任務（10030 ~ 10039）
+    TASK_SKIP_TODAY = 10030  # 打卡任務：今天不執行（假日或設定跳過）
+
+
     # 🧰 工具模組錯誤支線（40000 ~ 49999）
     # log_helper.py 目前無錯誤碼需求
 
@@ -54,7 +69,19 @@ TASK_ERROR_CODES = {
     ResultCode.TASK_SID_COOKIE_NOT_FOUND,
     ResultCode.TASK_CONVERT_COOKIE_HEADER_FAILED,
     ResultCode.TASK_SAVE_LOGIN_STATE_FAILED,
+    ResultCode.TASK_VPN_ENV_MISSING_KEY,
+    ResultCode.TASK_VPN_CONFIG_FILE_NOT_FOUND,
+    ResultCode.TASK_VPN_CONFIG_INVALID_FORMAT,
+    ResultCode.TASK_VPN_PROCESS_NOT_FOUND,
+    ResultCode.TASK_VPN_TUN_GW_MISSING,
+    ResultCode.TASK_VPN_ROUTE_ADD_FAILED,
+    ResultCode.TASK_VPN_STOP_FAILED,
+    ResultCode.TASK_VPN_INVALID_ACTION,
+    ResultCode.TASK_SKIP_TODAY,
+
+
 }
+
 
 TOOL_ERROR_CODES = {
     ResultCode.TOOLS_TASK_FETCH_VERIFICATION_CODE_FAILED,
@@ -79,4 +106,16 @@ ERROR_MESSAGES = {
     ResultCode.TASK_SID_COOKIE_NOT_FOUND: "task: 未能擷取 connect.sid cookie",
     ResultCode.TASK_CONVERT_COOKIE_HEADER_FAILED: "task: 無法抓取 cookies 或轉換為 header 格式",
     ResultCode.TASK_SAVE_LOGIN_STATE_FAILED:"task: 儲存 login_state 檔案失敗（可能是權限或格式問題）",
+    ResultCode.TASK_VPN_ENV_MISSING_KEY: "VPN 環境變數缺失，請檢查 .env 設定",
+    ResultCode.TASK_VPN_CONFIG_FILE_NOT_FOUND: "VPN 設定檔不存在，請確認 VPN_CONFIG_PATH",
+    ResultCode.TASK_VPN_CONFIG_INVALID_FORMAT: "VPN 設定檔格式錯誤（缺少 exe_path 或 params）",
+    ResultCode.TASK_VPN_PROCESS_NOT_FOUND: "VPN 啟動後未偵測到 tun2socks 進程",
+    ResultCode.TASK_VPN_TUN_GW_MISSING: "無法從參數找到 -tunGw，無法設定全域路由",
+    ResultCode.TASK_VPN_ROUTE_ADD_FAILED: "設定全域路由失敗",
+    ResultCode.TASK_VPN_STOP_FAILED: "關閉 tun2socks 進程失敗",
+    ResultCode.TASK_VPN_INVALID_ACTION: "VPN 控制器 action 無效（必須為 start 或 stop）",
+    ResultCode.TASK_SKIP_TODAY: "打卡任務：今天不執行（假日或設定跳過）",
+
+
+
 }

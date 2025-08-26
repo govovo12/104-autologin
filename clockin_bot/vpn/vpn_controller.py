@@ -1,49 +1,49 @@
-import psutil
-from clockin_bot.vpn.connect_ss_local import start_vpn
-from clockin_bot.tools.retry_runner import run_with_retry
-from clockin_bot.tools.log_utils import report_and_notify
-from clockin_bot.clockin.base.result import TaskResult, ResultCode
-from clockin_bot.logger.logger import get_logger
+# clockin_bot/vpn/vpn_controller.py
 
-log = get_logger("vpn")
-
+from clockin_bot.vpn.vpn_env_checker import check_vpn_env_vars
+from clockin_bot.vpn.vpn_operator import start_vpn, stop_vpn
+from clockin_bot.tools.env_loader import get_env_var, get_abs_path_from_env
+from clockin_bot.tools.common.result_code import ResultCode
+from clockin_bot.tools.printer.log_helper import log_code_message
 
 
-
-
-def ensure_vpn_ready() -> TaskResult:
+def run_vpn(action: str):
     """
-    啟動 VPN，並進行最多 3 次重試。
-    若成功則回傳 SUCCESS，否則會自動推播錯誤訊息與 log。
+    根據 action 執行 VPN 操作
+    回傳 (result_code, detail)
     """
-    result = run_with_retry(start_vpn, retry=3, delay_sec=1)
+    # Step 1: 檢查必要環境變數
+    rc, env_vars = check_vpn_env_vars()
+    if rc != ResultCode.SUCCESS:
+        return rc, env_vars
 
-    if result.code != ResultCode.SUCCESS:
-        report_and_notify(result)
+    # Step 2: 取出必要值
+    config_path = get_abs_path_from_env("VPN_CONFIG_PATH")
+    interface_name = get_env_var("VPN_INTERFACE_NAME")
+    skip_ip_check = get_env_var("VPN_SKIP_IP_CHECK", "false").lower() == "true"
 
-    return result
-
-
-def stop_vpn() -> TaskResult:
-    """
-    停止 VPN：嘗試結束 sslocal.exe 背景程序。
-    """
-    found = False
-    for proc in psutil.process_iter(["pid", "name"]):
-        if "sslocal.exe" in proc.info["name"]:
-            try:
-                proc.terminate()
-                found = True
-            except Exception as e:
-                msg = f"❌ 結束 sslocal.exe 失敗：{e}"
-                log.error(msg)
-                return TaskResult(code=ResultCode.VPN_STOP_FAILED, message=msg)
-
-    if found:
-        msg = "✅ VPN (sslocal.exe) 已成功結束"
-        log.info(msg)
-        return TaskResult(code=ResultCode.SUCCESS, message=msg)
+    # Step 3: 執行
+    if action.lower() == "start":
+        return start_vpn(config_path, interface_name, skip_ip_check)
+    elif action.lower() == "stop":
+        return stop_vpn()
     else:
-        msg = "⚠ 找不到正在執行的 sslocal.exe"
-        log.warning(msg)
-        return TaskResult(code=ResultCode.VPN_NOT_RUNNING, message=msg)
+        return ResultCode.TASK_VPN_INVALID_ACTION, {"action": action}
+
+
+def vpn_main(action: str = "start"):
+    """
+    VPN 主入口，可透過 CLI 傳入 action (start/stop)
+    """
+    rc, detail = run_vpn(action)
+    # ✅ 使用統一的 log_helper 印出
+    log_code_message(rc)
+    # 如果需要，也可以選擇性印出 detail（可考慮之後加到 log_helper 內）
+    if detail:
+        print(f"detail: {detail}")
+
+
+__task_info__ = {
+    "entry": vpn_main,
+    "desc": "啟動或停止 VPN，並驗證環境變數"
+}

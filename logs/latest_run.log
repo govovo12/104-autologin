@@ -1,20 +1,18 @@
-[2025-07-23 00:50:52] 成功發送 Telegram 訊息
-[2025-07-23 00:50:55] 成功發送 Telegram 訊息
-"isEnable": false, "isRequiredReason": false, "overAttCardDataId": 519344925910135}}
-07-23 00:50:49] 函式結束執行：should_skip_today
-[2025-07-23 00:50:49] 開始呼叫函式：run_with_retry
-[2025-07-23 00:50:51] 函式結束執行：run_with_retry
-[2025-07-23 00:50:51] 開始呼叫函式：run_with_retry
-[2025-07-23 00:50:51] 開始呼叫函式：run_clockin_104_flow
-[2025-07-23 00:50:51] 開始呼叫函式：send_clockin_request
-[2025-07-23 00:50:51] 函式結束執行：send_clockin_request
-[2025-07-23 00:50:51] 開始呼叫函式：parse_clockin_response
-[2025-07-23 00:50:51] 函式結束執行：parse_clockin_response
-[2025-07-23 00:50:51] 函式結束執行：run_clockin_104_flow
-[2025-07-23 00:50:51] 函式結束執行：run_with_retry
-[2025-07-23 00:50:51] 開始呼叫函式：send_telegram_message
-[2025-07-23 00:50:52] 函式結束執行：send_telegram_message
-[2025-07-23 00:50:52] 開始呼叫函式：upload_log_only
-[2025-07-23 00:50:54] 開始呼叫函式：send_telegram_message
-[2025-07-23 00:50:55] 函式結束執行：send_telegram_message
-[2025-07-23 00:50:55] 函式結束執行：upload_log_only
+[2025-08-27 00:07:14] 成功發送 Telegram 訊息
+[2025-08-27 00:07:16] 成功發送 Telegram 訊息
+"isEnable": false, "isRequiredReason": false, "overAttCardDataId": 534256953829181}}
+08-27 00:07:08] 函式結束執行：should_skip_today
+[2025-08-27 00:07:11] 開始呼叫函式：run_with_retry
+[2025-08-27 00:07:11] 開始呼叫函式：run_clockin_104_flow
+[2025-08-27 00:07:11] 開始呼叫函式：send_clockin_request
+[2025-08-27 00:07:11] 函式結束執行：send_clockin_request
+[2025-08-27 00:07:11] 開始呼叫函式：parse_clockin_response
+[2025-08-27 00:07:11] 函式結束執行：parse_clockin_response
+[2025-08-27 00:07:11] 函式結束執行：run_clockin_104_flow
+[2025-08-27 00:07:11] 函式結束執行：run_with_retry
+[2025-08-27 00:07:12] 開始呼叫函式：send_telegram_message
+[2025-08-27 00:07:14] 函式結束執行：send_telegram_message
+[2025-08-27 00:07:14] 開始呼叫函式：upload_log_only
+[2025-08-27 00:07:15] 開始呼叫函式：send_telegram_message
+[2025-08-27 00:07:16] 函式結束執行：send_telegram_message
+[2025-08-27 00:07:16] 函式結束執行：upload_log_only

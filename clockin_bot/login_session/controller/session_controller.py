@@ -6,10 +6,8 @@ from clockin_bot.tools.printer.log_helper import log_code_message
 
 # ✅ 任務模組（登入步驟）
 from clockin_bot.login_session.steps.load_env_config import step_1_load_env
-from clockin_bot.login_session.steps.step_open_vpn import step_2_open_vpn
 from clockin_bot.login_session.steps.step_3_open_browser import step_3_open_browser
 from clockin_bot.login_session.steps.step_4_navigate_to_login import step_4_navigate_to_login
-from clockin_bot.login_session.steps.step_close_vpn import step_close_vpn
 from clockin_bot.login_session.steps.step_6_submit_login import step_6_submit_login
 from clockin_bot.login_session.steps.step_5_fetch_latest_email_time import step_5_fetch_latest_email_time
 from clockin_bot.login_session.steps.step_7_fetch_verification_code import step_7_fetch_verification_code
@@ -20,7 +18,8 @@ from clockin_bot.login_session.steps.step_11_convert_cookie_header import step_1
 from clockin_bot.login_session.steps.step_12_save_login_state import save_login_state
 from clockin_bot.login_session.steps.step_13_release_playwright import run_step_13_release_playwright
 
-
+# ✅ 新 VPN 子控
+from clockin_bot.vpn.vpn_controller import run_vpn
 
 
 # Step 1：讀取 .env 並存入 context_data
@@ -37,11 +36,12 @@ async def run_step_1_load_env(context_data: dict) -> int:
 # Step 2：開啟 VPN（根據 ENABLE_VPN 決定）
 async def run_step_2_open_vpn(context_data: dict) -> int:
     print("🌐 STEP 2: 嘗試開啟 VPN（若設定為啟用）")
-    code = await step_2_open_vpn(context_data)
-    if code != ResultCode.SUCCESS:
-        log_code_message(code)
-        return code
-    return ResultCode.SUCCESS
+    if not context_data.get("ENABLE_VPN", False):
+        return ResultCode.SUCCESS
+    rc, detail = run_vpn("start")
+    log_code_message(rc)
+    return rc
+
 
 
 # Step 3：初始化瀏覽器與 page
@@ -67,27 +67,21 @@ async def run_step_4_navigate_to_login(context_data: dict) -> int:
     log_code_message(code)
     return code
 
+
 # Step 5：抓最新 Gmail 驗證碼（不等待新信）
 async def run_step_5_fetch_latest_email_time(context_data: dict) -> int:
     print("📧 STEP 5: 抓取最新信時間戳")
-
-    # 這裡不自己建立 service，全部交給任務模組做
     code, service, last_email_time = await step_5_fetch_latest_email_time(
         debug=context_data.get("DEBUG_MODE", False)
     )
-
     log_code_message(code)
     if code != ResultCode.SUCCESS:
         return code
-
     context_data["gmail_service"] = service
     context_data["last_email_time"] = last_email_time
-
     if context_data.get("DEBUG_MODE", False):
         print(f"[DEBUG] context_data after step 5: {context_data}")
-
     return ResultCode.SUCCESS
-
 
 
 # Step 6：提交帳密登入
@@ -101,6 +95,7 @@ async def run_step_6_submit_login(context_data: dict) -> int:
     )
     log_code_message(code)
     return code
+
 
 # Step 7：抓取最新信件的驗證碼
 async def run_step_7_fetch_verification_code(context_data: dict) -> int:
@@ -119,6 +114,7 @@ async def run_step_7_fetch_verification_code(context_data: dict) -> int:
         print(f"[DEBUG] context_data after step 7: {context_data}")
     return ResultCode.SUCCESS
 
+
 # Step 8：輸入驗證碼
 async def run_step_8_input_verification_code(context_data: dict) -> int:
     print("⌨️ STEP 8: 輸入驗證碼")
@@ -130,6 +126,7 @@ async def run_step_8_input_verification_code(context_data: dict) -> int:
     log_code_message(code)
     return code
 
+
 # Step 9：等待跳轉至私人秘書頁面
 async def run_step_9_wait_for_redirect(context_data: dict) -> int:
     print("🛰️ STEP 9: 等待導向 /psc2")
@@ -139,6 +136,7 @@ async def run_step_9_wait_for_redirect(context_data: dict) -> int:
     )
     log_code_message(code)
     return code
+
 
 # Step 10：抓取最新的sid用來確認伺服器已準備好最新cookie
 async def run_step_10_wait_for_sid_cookie(context_data: dict) -> int:
@@ -151,9 +149,9 @@ async def run_step_10_wait_for_sid_cookie(context_data: dict) -> int:
     log_code_message(code)
     if code != ResultCode.SUCCESS:
         return code
-
     context_data["sid_cookie_header"] = sid_cookie_header
     return ResultCode.SUCCESS
+
 
 # Step 11：抓取原始cookie並轉換為 header
 async def run_step_11_convert_cookie_header(context_data: dict) -> int:
@@ -165,9 +163,9 @@ async def run_step_11_convert_cookie_header(context_data: dict) -> int:
     log_code_message(code)
     if code != ResultCode.SUCCESS:
         return code
-
     context_data["login_state"] = login_state
     return ResultCode.SUCCESS
+
 
 # Step 12：儲存 login_state 檔案
 async def run_step_12_save_login_state(context_data: dict) -> int:
@@ -180,6 +178,7 @@ async def run_step_12_save_login_state(context_data: dict) -> int:
     log_code_message(code)
     return code
 
+
 # Step 13：釋放 Playwright 資源
 async def run_step_13_release_playwright_step(context_data: dict) -> int:
     print("📦 STEP 13: 關閉 Playwright 資源")
@@ -187,13 +186,12 @@ async def run_step_13_release_playwright_step(context_data: dict) -> int:
     return code
 
 
-
-# VPN 關閉模組（尚未指定 Step 編號，未來可調整）
+# VPN 關閉（最後）
 async def run_step_close_vpn(context_data: dict) -> int:
-    # 暫不印 STEP N，未來再補
-    code = await asyncio.to_thread(step_close_vpn)
-    log_code_message(code)
-    return code
+    print("🛑 STEP X: 嘗試關閉 VPN")
+    rc, detail = run_vpn("stop")
+    log_code_message(rc)
+    return rc
 
 
 # ✅ 子控主流程
@@ -215,26 +213,27 @@ async def run_session_controller():
     code = await run_step_4_navigate_to_login(context_data)
     if code != ResultCode.SUCCESS:
         return
-    
+
     code = await run_step_5_fetch_latest_email_time(context_data)
     if code != ResultCode.SUCCESS:
         return
+
     code = await run_step_6_submit_login(context_data)
     if code != ResultCode.SUCCESS:
         return
-    
+
     code = await run_step_7_fetch_verification_code(context_data)
     if code != ResultCode.SUCCESS:
         return
-    
+
     code = await run_step_8_input_verification_code(context_data)
     if code != ResultCode.SUCCESS:
         return
-    
+
     code = await run_step_9_wait_for_redirect(context_data)
     if code != ResultCode.SUCCESS:
         return
-    
+
     code = await run_step_10_wait_for_sid_cookie(context_data)
     if code != ResultCode.SUCCESS:
         return
@@ -251,13 +250,9 @@ async def run_session_controller():
     if code != ResultCode.SUCCESS:
         return
 
-
-
     code = await run_step_close_vpn(context_data)
     if code != ResultCode.SUCCESS:
         return
-
- 
 
     print("🎉 登入流程全部完成！")
 

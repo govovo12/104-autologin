@@ -1,0 +1,13 @@
+{
+  "exe_path": "C:\\Program Files (x86)\\Outline\\resources\\app.asar.unpacked\\output\\client\\windows-386\\tun2socks.exe",
+  "params": [
+    "-adapterIndex", "17",
+    "-tunName", "outline-tap0",
+    "-tunAddr", "10.0.85.2",
+    "-tunGw", "10.0.85.1",
+    "-tunMask", "255.255.255.0",
+    "-tunDNS", "1.1.1.1,9.9.9.9",
+    "-client", "{\"transport\":\"ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTp5V3FwTUFsbXJ5eDMydnMwdndQVlNn@18.179.245.45:38502/?outline=1\"}",
+    "-logLevel", "info"
+  ]
+}

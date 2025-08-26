@@ -12,15 +12,19 @@ from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
-CREDENTIALS_PATH = Path("credentials.json")
-TOKEN_PATH = Path("token.json")
+CREDENTIALS_PATH = Path.cwd() / "oauth" / "credentials.json"
+TOKEN_PATH = Path.cwd() / "oauth" / "token.json"
 
 logger = logging.getLogger(__name__)
 
-async def get_gmail_service_async():
+async def get_gmail_service_async(debug: bool = False):
     # 這裡示範同步邏輯包成線程，因為 google api 目前沒官方 async
     def build_service():
         creds = None
+        if debug:
+            print(f"[DEBUG] ➜ CREDENTIALS_PATH: {CREDENTIALS_PATH}")
+            print(f"[DEBUG] ➜ TOKEN_PATH: {TOKEN_PATH}")
+
         if TOKEN_PATH.exists():
             creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
 
@@ -35,12 +39,13 @@ async def get_gmail_service_async():
 
             with open(TOKEN_PATH, "w") as token_file:
                 token_file.write(creds.to_json())
-        # 目前只能同步呼叫 build 函式
+
         from googleapiclient.discovery import build
         return build("gmail", "v1", credentials=creds)
 
     service = await asyncio.to_thread(build_service)
     return service
+
 
 async def fetch_gmail_verification_code_with_debug_async(
     service,
